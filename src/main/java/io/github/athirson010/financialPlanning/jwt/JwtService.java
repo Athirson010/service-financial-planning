@@ -6,13 +6,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Service
@@ -25,15 +21,11 @@ public class JwtService {
     private String chaveAssinatura;
 
     public String gerarToken(UsuarioModel usuario) {
-        long expString = Long.valueOf(expiracao);
-        LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
-        Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
-        Date data = Date.from(instant);
-
+        long expString = Long.parseLong(expiracao);
         return Jwts
                 .builder()
                 .setSubject(usuario.getEmail())
-                .setExpiration(data)
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(expString).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
                 .compact();
     }
@@ -46,15 +38,16 @@ public class JwtService {
                 .getBody();
     }
 
-    public void tokenValido(String token) {
+    public Boolean tokenValido(String token) {
         try {
             obterClaims(token);
+            return true;
         } catch (ExpiredJwtException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "token expirado");
+            return false;
         }
     }
 
     public String obterLoginUsuario(String token) throws ExpiredJwtException {
-        return (String) obterClaims(token).getSubject();
+        return obterClaims(token).getSubject();
     }
 }
