@@ -7,6 +7,7 @@ import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class UsuarioService implements UserDetailsService {
+
     @Autowired
     UsuarioRepository repository;
+
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
@@ -67,5 +72,14 @@ public class UsuarioService implements UserDetailsService {
         } catch (UsernameNotFoundException | SenhaInvalidaException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+    }
+
+    public List<UsuarioModel> buscarTodosUsuarios(){
+        return repository.findAll();
+    }
+
+    public void deletarUsuario(String id) {
+       // repository.findById(id).orElseThrow()
+      repository.deleteById(id);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.athirson010.financialPlanning.controller;
 
+import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
 import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
 import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import java.util.List;
 
-@RestController
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Usuario")
-public class UsuarioController {
+@RestController
+public class UsuarioController extends RestSecurity {
     @Autowired
     private UsuarioService service;
 
@@ -26,9 +30,22 @@ public class UsuarioController {
         service.criarUsuario(usuario);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(OK)
+    public void deleteUsuario(@PathVariable String id){
+        service.deletarUsuario(id);
+    }
+
+
     @PostMapping("/auth")
     public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
         return service.certificar(credenciais);
     }
+
+    @GetMapping()
+    public List<UsuarioModel> buscarUsuarios(){
+        return service.buscarTodosUsuarios();
+    }
+
 
 }
