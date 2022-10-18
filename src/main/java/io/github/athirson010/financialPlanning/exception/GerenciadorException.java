@@ -1,5 +1,7 @@
 package io.github.athirson010.financialPlanning.exception;
 
+
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,5 +25,11 @@ public class GerenciadorException {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleValidationToken(ExpiredJwtException e) {
+        return "token expirado" + e;
     }
 }

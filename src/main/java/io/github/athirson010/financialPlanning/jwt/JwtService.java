@@ -6,7 +6,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -44,16 +46,11 @@ public class JwtService {
                 .getBody();
     }
 
-    public boolean tokenValido(String token) {
+    public void tokenValido(String token) {
         try {
-            Claims claims = obterClaims(token);
-            Date dataExpiracao = claims.getExpiration();
-            LocalDateTime data =
-                    dataExpiracao.toInstant()
-                            .atZone(ZoneId.systemDefault()).toLocalDateTime();
-            return !LocalDateTime.now().isAfter(data);
-        } catch (Exception e) {
-            return false;
+            obterClaims(token);
+        } catch (ExpiredJwtException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "token expirado");
         }
     }
 
