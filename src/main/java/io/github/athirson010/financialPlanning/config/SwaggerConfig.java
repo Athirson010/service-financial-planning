@@ -3,7 +3,6 @@ package io.github.athirson010.financialPlanning.config;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.GroupedOpenApi;
@@ -23,6 +22,7 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("API planejamento financeiro - public").pathsToMatch("/**").build();
     }
+
     @Bean
     public OpenAPI openApi() {
         return new OpenAPI()

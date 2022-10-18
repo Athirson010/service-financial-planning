@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -32,10 +31,9 @@ public class UsuarioController extends RestSecurity {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
-    public void deleteUsuario(@PathVariable String id){
+    public void deleteUsuario(@PathVariable String id) {
         service.deletarUsuario(id);
     }
-
 
     @PostMapping("/auth")
     public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
@@ -43,7 +41,7 @@ public class UsuarioController extends RestSecurity {
     }
 
     @GetMapping()
-    public List<UsuarioModel> buscarUsuarios(){
+    public List<UsuarioModel> buscarUsuarios() {
         return service.buscarTodosUsuarios();
     }
 

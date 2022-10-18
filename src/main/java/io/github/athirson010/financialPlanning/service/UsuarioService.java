@@ -7,7 +7,6 @@ import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,12 +73,12 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    public List<UsuarioModel> buscarTodosUsuarios(){
+    public List<UsuarioModel> buscarTodosUsuarios() {
         return repository.findAll();
     }
 
     public void deletarUsuario(String id) {
-       // repository.findById(id).orElseThrow()
-      repository.deleteById(id);
+        // repository.findById(id).orElseThrow()
+        repository.deleteById(id);
     }
 }
