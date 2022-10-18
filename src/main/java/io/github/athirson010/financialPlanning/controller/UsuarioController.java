@@ -1,5 +1,7 @@
 package io.github.athirson010.financialPlanning.controller;
 
+import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
+import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +24,11 @@ public class UsuarioController {
     @ResponseStatus(CREATED)
     public void postCriarUsuario(@Valid @RequestBody UsuarioModel usuario) {
         service.criarUsuario(usuario);
+    }
+
+    @PostMapping("/auth")
+    public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
+        return service.certificar(credenciais);
     }
 
 }

@@ -12,11 +12,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private JwtService jwtService;
     private UsuarioService usuarioService;
+
 
     public JwtAuthFilter(JwtService jwtService, UsuarioService usuarioService) {
         this.jwtService = jwtService;
@@ -45,7 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(user);
             }
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
 
     }

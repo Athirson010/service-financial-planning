@@ -11,7 +11,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI config() {
         return new OpenAPI().info(
-                new Info().title("Planejamento financeiro").description("API Backend de planejamento financeiro").version("v0.0.1"));
+                new Info().title("Planejamento Financeiro").description("API Backend de planejamento financeiro").version("v0.0.1"));
     }
 
     @Bean
