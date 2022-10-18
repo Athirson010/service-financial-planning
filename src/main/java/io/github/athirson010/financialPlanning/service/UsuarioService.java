@@ -2,11 +2,17 @@ package io.github.athirson010.financialPlanning.service;
 
 import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
 import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
+import io.github.athirson010.financialPlanning.domain.dto.UsuarioModelDTO;
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
 import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +23,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
-public class UsuarioService implements UserDetailsService {
-
+public class UsuarioService implements UserDetailsService  {
     @Autowired
     UsuarioRepository repository;
-
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
@@ -69,16 +75,35 @@ public class UsuarioService implements UserDetailsService {
             String token = jwtService.gerarToken(usuario);
             return new TokenDTO(usuario.getEmail(), token);
         } catch (UsernameNotFoundException | SenhaInvalidaException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+            throw new ResponseStatusException(UNAUTHORIZED, e.getMessage());
         }
     }
 
-    public List<UsuarioModel> buscarTodosUsuarios() {
-        return repository.findAll();
+    public Page<UsuarioModelDTO> buscarTodosUsuarios(UsuarioModelDTO filter, Pageable pageable) {
+
+        UsuarioModel filterMapeado = modelMapper.map(filter, UsuarioModel.class);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<UsuarioModel> example = Example.of(filterMapeado, matcher);
+
+        Page<UsuarioModelDTO> usuariosPage = repository.findAll(example, pageable).map(this::toUsuarioModelDTO);
+
+        if (usuariosPage.getContent().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return usuariosPage;
     }
 
     public void deletarUsuario(String id) {
-        // repository.findById(id).orElseThrow()
+        repository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Usuario não encontrado"));
         repository.deleteById(id);
     }
+    public UsuarioModelDTO toUsuarioModelDTO(UsuarioModel usuarioModel) {
+        return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
+    }
+
 }

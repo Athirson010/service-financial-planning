@@ -3,15 +3,19 @@ package io.github.athirson010.financialPlanning.controller;
 import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
 import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
 import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
+import io.github.athirson010.financialPlanning.domain.dto.UsuarioModelDTO;
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -41,8 +45,8 @@ public class UsuarioController extends RestSecurity {
     }
 
     @GetMapping()
-    public List<UsuarioModel> buscarUsuarios() {
-        return service.buscarTodosUsuarios();
+    public Page<UsuarioModelDTO> buscarUsuarios(UsuarioModelDTO filter, @PageableDefault(sort = {"nome"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.buscarTodosUsuarios(filter, pageable);
     }
 
 
