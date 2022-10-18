@@ -1,9 +1,9 @@
 package io.github.athirson010.financialPlanning.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import lombok.Builder;
 import lombok.Data;
+import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
@@ -15,13 +15,18 @@ import java.time.LocalDate;
 @Document(value = "usuario")
 @Builder
 @Data
-public class UsuarioModel extends AbstractModel {
-    @NotEmpty()
-    private String nome;
+public class UsuarioModel {
+    @Id
     @Email()
     private String email;
+
+    @NotEmpty()
+    private String nome;
+
     @Size(min = 8)
     private String senha;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
+    private Boolean admin;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 }

@@ -10,8 +10,8 @@ public enum ErrorGenericoModel {
     SenhaNaoAtingeRequisitos("O campo de senha não atinge os requisitos minimos."),
     CampoNaoInformado("campo não informado!");
 
-        @Getter
-        private String value;
+    @Getter
+    private String value;
 
     @Override
     public String toString() {

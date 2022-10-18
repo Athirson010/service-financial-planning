@@ -1,4 +1,5 @@
 package io.github.athirson010.financialPlanning.controller;
+
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
