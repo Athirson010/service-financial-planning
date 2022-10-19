@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UsuarioModelDTO {
 
+    private String id;
+
     private String email;
 
     @NotEmpty()

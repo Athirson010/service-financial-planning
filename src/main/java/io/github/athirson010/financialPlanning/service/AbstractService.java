@@ -11,10 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.http.ResponseEntity;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,63 +32,46 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     }
 
     public List<Model> saveAll(List<Model> models) {
-        beforeSave(models);
-        List<Model> saved = repository.saveAll(models);
-        afterSave(saved);
-        return saved;
+        return repository.saveAll(models);
     }
 
     public List<Model> findAll() {
-        List<Model> models = findAll(null, null);
-        finishAssembly(models);
-        return models;
+        return findAll(null, null);
     }
 
     public List<Model> findAll(Integer page, Integer size) {
         if (page == null || size == null) {
-            List<Model> models = repository.findAll(PageRequest.of(0, findAllMaxResults)).getContent();
-            finishAssembly(models);
-            return models;
+            return repository.findAll(PageRequest.of(0, findAllMaxResults)).getContent();
         } else {
-            List<Model> models = repository.findAll(PageRequest.of(page, size)).getContent();
-            finishAssembly(models);
-            return models;
+            return repository.findAll(PageRequest.of(page, size)).getContent();
         }
     }
 
     public Page<Model> findAllPage(Integer page, Integer size) {
         if (page == null || size == null) {
-            List<Model> models = repository.findAll();
-            finishAssembly(models);
-            return new PageImpl(models);
+            return new PageImpl(repository.findAll());
         } else {
-            Page<Model> beans = repository.findAll(PageRequest.of(page, size));
-            finishAssembly(beans.getContent());
-            return beans;
+            return repository.findAll(PageRequest.of(page, size));
         }
     }
 
     public Model save(Model model) {
-        beforeSave(Arrays.asList(model));
-        Model saved = repository.save(model);
-        afterSave(saved);
-        return saved;
+        return repository.save(model);
     }
 
-    public ResponseEntity<Object> deleteById(String id) {
+    public void deleteById(String id) {
+        findById(id);
         repository.deleteById(id);
-        return null;
+        ;
     }
 
     public Optional<Model> findById(String id) {
         Optional<Model> optionalBean = repository.findById(id);
         if (optionalBean.isPresent()) {
             Model model = optionalBean.get();
-            finishAssembly(model);
             return Optional.of(model);
-        } else {
-            return null;
         }
+        return Optional.empty();
     }
 
     public void deleteAll() {
@@ -162,27 +143,6 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
             query = query.with(sort);
         }
         return query;
-    }
-
-    protected void finishAssembly(List<Model> models) {
-        models.forEach(model -> finishAssembly(model));
-    }
-
-    protected void finishAssembly(Model model) {
-    }
-
-    protected void beforeSave(List<Model> models) {
-        models.forEach(model -> beforeSave(model));
-    }
-
-    protected void beforeSave(Model model) {
-    }
-
-    protected void afterSave(List<Model> models) {
-        models.forEach(model -> afterSave(model));
-    }
-
-    protected void afterSave(Model model) {
     }
 
 }

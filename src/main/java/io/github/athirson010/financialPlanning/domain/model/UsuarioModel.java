@@ -1,11 +1,11 @@
 package io.github.athirson010.financialPlanning.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
@@ -19,8 +19,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioModel {
-    @Id
+public class UsuarioModel extends AbstractModel {
+
     @Email()
     private String email;
 
@@ -28,9 +28,11 @@ public class UsuarioModel {
     private String nome;
 
     @Size(min = 8)
+    @NotEmpty
     private String senha;
 
     private Boolean admin;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 }

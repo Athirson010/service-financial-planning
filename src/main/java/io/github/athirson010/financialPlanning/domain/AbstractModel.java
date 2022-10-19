@@ -13,5 +13,5 @@ public class AbstractModel {
     private String id;
 
     @LastModifiedDate
-    private LocalDate ultimaAtualizacao;
+    private LocalDate ultimaAtualizacao = LocalDate.now();
 }

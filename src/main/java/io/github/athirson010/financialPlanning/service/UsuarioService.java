@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
@@ -39,8 +41,18 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public void criarUsuario(UsuarioModel usuario) {
-        usuario.setSenha(encoder.encode(usuario.getSenha()));
-        repository.save(usuario);
+
+        buscarUsuarioPorEmail(usuario.getEmail()).ifPresentOrElse(
+                (usuarioModel) -> {
+                    throw new ResponseStatusException(UNAUTHORIZED, "Email já cadastrado");
+                }, () -> {
+                    usuario.setSenha(encoder.encode(usuario.getSenha()));
+                    repository.save(usuario);
+                });
+    }
+
+    private Optional<UsuarioModel> buscarUsuarioPorEmail(String email) {
+        return repository.findByEmail(email);
     }
 
     public UserDetails autenticar(UsuarioModel usuario) {
@@ -111,10 +123,11 @@ public class UsuarioService implements UserDetailsService {
         return modelMapper.map(usuarioModelDTO, UsuarioModel.class);
     }
 
-    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModelDTO user) {
+    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
         buscarUsuarioPorID(id);
-        user.setEmail(id);
-        return this.toUsuarioModelDTO(repository.save(this.toUsuarioModel(user)));
+        user.setSenha(encoder.encode(user.getSenha()));
+        user.setId(id);
+        return this.toUsuarioModelDTO(repository.save(user));
     }
 
     public UsuarioModel buscarUsuarioPorID(String id) {
