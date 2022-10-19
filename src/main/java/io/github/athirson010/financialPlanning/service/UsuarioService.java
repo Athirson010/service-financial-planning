@@ -111,7 +111,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public void deletarUsuario(String id) {
-        buscarUsuarioPorID(id);
+        buscarUsuarioPorId(id);
         repository.deleteById(id);
     }
 
@@ -119,19 +119,24 @@ public class UsuarioService implements UserDetailsService {
         return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
     }
 
-    public UsuarioModel toUsuarioModel(UsuarioModelDTO usuarioModelDTO) {
-        return modelMapper.map(usuarioModelDTO, UsuarioModel.class);
-    }
-
     public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
-        buscarUsuarioPorID(id);
+        buscarUsuarioPorId(id);
         user.setSenha(encoder.encode(user.getSenha()));
         user.setId(id);
         return this.toUsuarioModelDTO(repository.save(user));
     }
 
-    public UsuarioModel buscarUsuarioPorID(String id) {
+    public UsuarioModel buscarUsuarioPorId(String id) {
         return repository.findById(id).orElseThrow(() -> new NaoEncontradoException("Usuario"));
     }
 
+    public UsuarioModelDTO buscarUsuarioDTOPorEmail(String email) {
+        UsuarioModel usuarioModel = buscarUsuarioPorEmail(email).orElseThrow(() -> new NaoEncontradoException("E-mail"));
+        return this.toUsuarioModelDTO(usuarioModel);
+    }
+
+    public UsuarioModelDTO buscarUsuarioDTOPorId(String id) {
+        UsuarioModel usuarioModel = buscarUsuarioPorId(id);
+        return this.toUsuarioModelDTO(usuarioModel);
+    }
 }

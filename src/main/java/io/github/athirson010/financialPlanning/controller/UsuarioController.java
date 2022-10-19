@@ -42,6 +42,17 @@ public class UsuarioController extends RestSecurity {
         return service.buscarTodosUsuarios(filter, pageable);
     }
 
+    @GetMapping("/{email}")
+    public UsuarioModelDTO getUsuarioPorEmail(@PathVariable String email) {
+        return service.buscarUsuarioDTOPorEmail(email);
+    }
+
+    @GetMapping("/{id}")
+    public UsuarioModelDTO getUsuarioPorId(@PathVariable String id) {
+        return service.buscarUsuarioDTOPorId(id);
+    }
+
+
     @PutMapping("/{id}")
     @ResponseStatus(OK)
     public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
