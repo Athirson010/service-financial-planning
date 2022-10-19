@@ -26,6 +26,13 @@ public class SaldoController extends RestSecurity {
         return service.save(saldo);
     }
 
+    @PutMapping(path = "/")
+    @ResponseStatus(CREATED)
+    public SaldoModel putAtualizarSaldo(@PathVariable String id, @Valid @RequestBody SaldoModel saldo) {
+        buscarPorID(id);
+        return service.save(saldo);
+    }
+
     @GetMapping("/{id}")
     public SaldoModel buscarPorID(@PathVariable String id) {
         return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Saldo"));

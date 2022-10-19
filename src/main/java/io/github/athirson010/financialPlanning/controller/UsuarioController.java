@@ -52,7 +52,6 @@ public class UsuarioController extends RestSecurity {
         return service.buscarUsuarioDTOPorId(id);
     }
 
-
     @PutMapping("/{id}")
     @ResponseStatus(OK)
     public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
