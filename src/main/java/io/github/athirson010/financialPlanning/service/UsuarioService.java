@@ -4,6 +4,7 @@ import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
 import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
 import io.github.athirson010.financialPlanning.domain.dto.UsuarioModelDTO;
 import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
+import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
@@ -44,9 +45,8 @@ public class UsuarioService implements UserDetailsService  {
 
     public UserDetails autenticar(UsuarioModel usuario) {
         UserDetails user = loadUserByUsername(usuario.getEmail());
-        boolean senhasBatem = encoder.matches(usuario.getSenha(), user.getPassword());
 
-        if (senhasBatem) {
+        if (encoder.matches(usuario.getSenha(), user.getPassword())){
             return user;
         }
         throw new SenhaInvalidaException();
@@ -54,7 +54,7 @@ public class UsuarioService implements UserDetailsService  {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UsuarioModel usuario = repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
+                .orElseThrow(() -> new NaoEncontradoException("Usuário"));
 
         String[] roles = new String[]{"USER"};
 
@@ -99,11 +99,25 @@ public class UsuarioService implements UserDetailsService  {
     }
 
     public void deletarUsuario(String id) {
-        repository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Usuario não encontrado"));
+        buscarUsuarioPorID(id);
         repository.deleteById(id);
     }
     public UsuarioModelDTO toUsuarioModelDTO(UsuarioModel usuarioModel) {
         return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
+    }
+
+    public UsuarioModel toUsuarioModel(UsuarioModelDTO usuarioModelDTO){
+        return modelMapper.map(usuarioModelDTO, UsuarioModel.class);
+    }
+
+    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModelDTO user) {
+        buscarUsuarioPorID(id);
+        user.setEmail(id);
+        return this.toUsuarioModelDTO(repository.save(this.toUsuarioModel(user)));
+    }
+
+    public UsuarioModel buscarUsuarioPorID(String id){
+        return repository.findById(id).orElseThrow(() -> new NaoEncontradoException("Usuario"));
     }
 
 }
