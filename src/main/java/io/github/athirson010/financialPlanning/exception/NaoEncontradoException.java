@@ -1,6 +1,5 @@
 package io.github.athirson010.financialPlanning.exception;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;

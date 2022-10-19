@@ -8,11 +8,8 @@ import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +25,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class UsuarioController extends RestSecurity {
     @Autowired
     private UsuarioService service;
+
     @PostMapping("/auth")
     public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
         return service.certificar(credenciais);
@@ -43,17 +41,18 @@ public class UsuarioController extends RestSecurity {
     public Page<UsuarioModelDTO> buscarUsuarios(UsuarioModelDTO filter, @PageableDefault() Pageable pageable) {
         return service.buscarTodosUsuarios(filter, pageable);
     }
+
     @PutMapping("/{id}")
     @ResponseStatus(OK)
-    public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModelDTO user){  return service.atualizarDadosUsuario(id, user); }
+    public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModelDTO user) {
+        return service.atualizarDadosUsuario(id, user);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void deleteUsuario(@PathVariable String id) {
         service.deletarUsuario(id);
     }
-
-
 
 
 }

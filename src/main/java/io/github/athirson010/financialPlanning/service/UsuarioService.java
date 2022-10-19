@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
-public class UsuarioService implements UserDetailsService  {
+public class UsuarioService implements UserDetailsService {
     @Autowired
     UsuarioRepository repository;
     @Autowired
@@ -46,7 +46,7 @@ public class UsuarioService implements UserDetailsService  {
     public UserDetails autenticar(UsuarioModel usuario) {
         UserDetails user = loadUserByUsername(usuario.getEmail());
 
-        if (encoder.matches(usuario.getSenha(), user.getPassword())){
+        if (encoder.matches(usuario.getSenha(), user.getPassword())) {
             return user;
         }
         throw new SenhaInvalidaException();
@@ -102,11 +102,12 @@ public class UsuarioService implements UserDetailsService  {
         buscarUsuarioPorID(id);
         repository.deleteById(id);
     }
+
     public UsuarioModelDTO toUsuarioModelDTO(UsuarioModel usuarioModel) {
         return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
     }
 
-    public UsuarioModel toUsuarioModel(UsuarioModelDTO usuarioModelDTO){
+    public UsuarioModel toUsuarioModel(UsuarioModelDTO usuarioModelDTO) {
         return modelMapper.map(usuarioModelDTO, UsuarioModel.class);
     }
 
@@ -116,7 +117,7 @@ public class UsuarioService implements UserDetailsService  {
         return this.toUsuarioModelDTO(repository.save(this.toUsuarioModel(user)));
     }
 
-    public UsuarioModel buscarUsuarioPorID(String id){
+    public UsuarioModel buscarUsuarioPorID(String id) {
         return repository.findById(id).orElseThrow(() -> new NaoEncontradoException("Usuario"));
     }
 
