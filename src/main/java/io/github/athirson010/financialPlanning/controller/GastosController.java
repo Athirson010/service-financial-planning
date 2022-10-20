@@ -1,9 +1,10 @@
 package io.github.athirson010.financialPlanning.controller;
 
 import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
+import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
-import io.github.athirson010.financialPlanning.service.SaldoService;
+import io.github.athirson010.financialPlanning.service.GastoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,33 +14,31 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/balance", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Saldo")
+@RequestMapping(value = "/spending", produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name = "Gasto")
 @RestController
-public class SaldoController extends RestSecurity {
+public class GastosController extends RestSecurity {
     @Autowired
-    private SaldoService service;
+    private GastoService service;
 
     @PostMapping(path = "/")
     @ResponseStatus(CREATED)
-    public SaldoModel postCriarSaldo(@Valid @RequestBody SaldoModel saldo) {
-        return service.save(saldo);
+    public GastoModel postCriarSaldo(@Valid @RequestBody GastoModel gasto) {
+        return service.save(gasto);
     }
 
     @PutMapping(path = "/{id}")
-    public SaldoModel putAtualizarSaldo(@PathVariable String id, @Valid @RequestBody SaldoModel saldo) {
-       return service.update(id, saldo);
+    public GastoModel putAtualizarSaldo(@PathVariable String id, @Valid @RequestBody GastoModel gasto) {
+        return service.update(id, gasto);
     }
 
     @GetMapping("/{id}")
-    public SaldoModel getPorId(@PathVariable String id) {
-        return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Saldo"));
+    public GastoModel getPorId(@PathVariable String id) {
+        return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Gasto"));
     }
 
     @DeleteMapping("/{id}")
     public void deletePorId(@PathVariable String id) {
         service.deleteById(id);
     }
-
-
 }

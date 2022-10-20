@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Usuario")

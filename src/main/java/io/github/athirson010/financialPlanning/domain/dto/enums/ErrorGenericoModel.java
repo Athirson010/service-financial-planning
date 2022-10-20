@@ -1,4 +1,4 @@
-package io.github.athirson010.financialPlanning.enums;
+package io.github.athirson010.financialPlanning.domain.dto.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
