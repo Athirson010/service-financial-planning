@@ -28,16 +28,16 @@ public class SaldoController extends RestSecurity {
 
     @PutMapping(path = "/{id}")
     public SaldoModel putAtualizarSaldo(@PathVariable String id, @Valid @RequestBody SaldoModel saldo) {
-       return service.update(id, saldo);
+        return service.update(id, saldo);
     }
 
     @GetMapping("/{id}")
-    public SaldoModel getPorId(@PathVariable String id) {
+    public SaldoModel getSaldoPorId(@PathVariable String id) {
         return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Saldo"));
     }
 
     @DeleteMapping("/{id}")
-    public void deletePorId(@PathVariable String id) {
+    public void deleteSaldoPorId(@PathVariable String id) {
         service.deleteById(id);
     }
 

@@ -2,7 +2,6 @@ package io.github.athirson010.financialPlanning.controller;
 
 import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
-import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.service.GastoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,22 +22,22 @@ public class GastosController extends RestSecurity {
 
     @PostMapping(path = "/")
     @ResponseStatus(CREATED)
-    public GastoModel postCriarSaldo(@Valid @RequestBody GastoModel gasto) {
+    public GastoModel postCriarGasto(@Valid @RequestBody GastoModel gasto) {
         return service.save(gasto);
     }
 
     @PutMapping(path = "/{id}")
-    public GastoModel putAtualizarSaldo(@PathVariable String id, @Valid @RequestBody GastoModel gasto) {
+    public GastoModel putAtualizarGasto(@PathVariable String id, @Valid @RequestBody GastoModel gasto) {
         return service.update(id, gasto);
     }
 
     @GetMapping("/{id}")
-    public GastoModel getPorId(@PathVariable String id) {
+    public GastoModel getGastoPorId(@PathVariable String id) {
         return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Gasto"));
     }
 
     @DeleteMapping("/{id}")
-    public void deletePorId(@PathVariable String id) {
+    public void deleteGastoPorId(@PathVariable String id) {
         service.deleteById(id);
     }
 }

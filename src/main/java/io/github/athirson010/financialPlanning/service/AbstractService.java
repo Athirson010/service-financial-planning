@@ -15,10 +15,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public abstract class AbstractService<Model extends AbstractModel, Repository extends MongoRepository<Model, String>> {
     protected Repository repository;
@@ -168,9 +166,10 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
         }
         return query;
     }
-    private String buscarContexto(String pacote){
+
+    private String buscarContexto(String pacote) {
         List<String> pacoteList = List.of(pacote.split("\\."));
-        return pacoteList.get(pacoteList.size() -1).replace("Model","");
+        return pacoteList.get(pacoteList.size() - 1).replace("Model", "");
     }
 
 }

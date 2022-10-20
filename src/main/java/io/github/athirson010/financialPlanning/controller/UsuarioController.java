@@ -52,12 +52,12 @@ public class UsuarioController extends RestSecurity {
     }
 
     @PutMapping("/{id}")
-    public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
+    public UsuarioModelDTO putDadosUsuarioPorId(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
         return service.atualizarDadosUsuario(id, user);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUsuario(@PathVariable String id) {
+    public void deleteUsuarioPorId(@PathVariable String id) {
         service.deletarUsuario(id);
     }
 
