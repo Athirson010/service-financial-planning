@@ -77,7 +77,6 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
         return modelGenerico;
     }
 
-
     public void deleteById(String id) {
         findById(id).ifPresentOrElse(
                 (usuarioModel) -> {
