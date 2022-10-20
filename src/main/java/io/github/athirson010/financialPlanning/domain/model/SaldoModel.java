@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Document(value = "saldo")
@@ -16,10 +17,9 @@ public class SaldoModel extends AbstractModel {
     @NotEmpty
     private String origem;
 
-    @NotEmpty
+    @NotNull
     private Double valor;
 
-    @NotEmpty
     private UsuarioModel usuario;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

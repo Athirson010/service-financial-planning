@@ -2,6 +2,8 @@ package io.github.athirson010.financialPlanning.service;
 
 
 import io.github.athirson010.financialPlanning.domain.AbstractModel;
+import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -13,11 +15,16 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class AbstractService<Model extends AbstractModel, Repository extends MongoRepository<Model, String>> {
     protected Repository repository;
+
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     protected MongoTemplate mongoTemplate;
     protected Class<Model> beanClass;
@@ -25,6 +32,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     private Integer findAllMaxResults;
     private String ACCENT_STRINGS = "àáâãäåßòóôõöøèéêëðçÐìíîïùúûüñšÿýž";
     private String NO_ACCENT_STRINGS = "aaaaaabooooooeeeeecdiiiiuuuunsyyz";
+    private Model modelGenerico;
 
     public AbstractService(Class<Model> beanClass, Repository repository) {
         this.beanClass = beanClass;
@@ -59,10 +67,26 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
         return repository.save(model);
     }
 
+    public Model update(String id, Model model) {
+        this.findById(id).ifPresentOrElse(
+                (objeto) -> {
+                    model.setId(id);
+                    modelGenerico = save(model);
+                },
+                () -> {
+                    throw new NaoEncontradoException(buscarContexto(beanClass.getName()));
+                });
+        return modelGenerico;
+    }
+
+
     public void deleteById(String id) {
-        findById(id);
-        repository.deleteById(id);
-        ;
+        findById(id).ifPresentOrElse(
+                (usuarioModel) -> {
+                    repository.deleteById(id);
+                }, () -> {
+                    throw new NaoEncontradoException(buscarContexto(beanClass.getName()));
+                });
     }
 
     public Optional<Model> findById(String id) {
@@ -143,6 +167,10 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
             query = query.with(sort);
         }
         return query;
+    }
+    private String buscarContexto(String pacote){
+        List<String> pacoteList = List.of(pacote.split("\\."));
+        return pacoteList.get(pacoteList.size() -1).replace("Model","");
     }
 
 }

@@ -53,13 +53,11 @@ public class UsuarioController extends RestSecurity {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(OK)
     public UsuarioModelDTO putDadosUsuario(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
         return service.atualizarDadosUsuario(id, user);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(OK)
     public void deleteUsuario(@PathVariable String id) {
         service.deletarUsuario(id);
     }

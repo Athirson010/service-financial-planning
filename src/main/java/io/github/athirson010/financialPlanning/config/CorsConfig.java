@@ -17,6 +17,7 @@ public class CorsConfig implements WebMvcConfigurer {
             }
         };
     }
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
