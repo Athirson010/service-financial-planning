@@ -143,7 +143,7 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioModel buscarUsuarioLogado() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         return repository.findByEmail(username).orElseGet(() -> {
-            throw  new NaoEncontradoException("Usuario");
+            throw new NaoEncontradoException("Usuario");
         });
     }
 }

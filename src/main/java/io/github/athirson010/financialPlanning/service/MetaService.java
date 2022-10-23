@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class MetaService extends AbstractService<MetaModel, MetaRepository> {
     @Autowired
     GastoService gastoService;
-
     @Autowired
     UsuarioService usuarioService;
 
@@ -21,10 +21,9 @@ public class MetaService extends AbstractService<MetaModel, MetaRepository> {
         super(MetaModel.class, repository);
     }
 
-
     @Override
     public MetaModel save(MetaModel model) {
-        model.setUsuarioModel(usuarioService.buscarUsuarioLogado());
+        model.setUsuario(usuarioService.buscarUsuarioLogado());
         super.save(model);
         criarGastosMensaisParaMeta(model);
         return model;
@@ -32,8 +31,7 @@ public class MetaService extends AbstractService<MetaModel, MetaRepository> {
 
     private void criarGastosMensaisParaMeta(MetaModel model) {
         buscarDatasPagamentoMensais(model).forEach(pagamento -> {
-            GastoModel gasto = new GastoModel(model.getNome(), model.getTipo(), pagamento, model.getUsuarioModel(), (model.getValorBruto() / model.getParcelas()), model);
-            gastoService.save(gasto);
+            gastoService.save(new GastoModel(model.getNome(), model.getTipo(), pagamento, model.getUsuario(), (model.getValorBruto() / model.getParcelas()), model));
         });
     }
 

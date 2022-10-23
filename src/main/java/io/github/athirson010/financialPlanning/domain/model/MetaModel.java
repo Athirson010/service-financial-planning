@@ -19,5 +19,5 @@ public class MetaModel extends AbstractModel {
     private Tipos tipo;
     private int parcelas;
     private LocalDate inicioPagamento;
-    private UsuarioModel usuarioModel;
+    private UsuarioModel usuario;
 }

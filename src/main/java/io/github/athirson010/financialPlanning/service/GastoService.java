@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class GastoService extends AbstractService<GastoModel, GastoRespository> {
     @Autowired
     UsuarioService usuarioService;
+
     public GastoService(GastoRespository repository) {
         super(GastoModel.class, repository);
     }
