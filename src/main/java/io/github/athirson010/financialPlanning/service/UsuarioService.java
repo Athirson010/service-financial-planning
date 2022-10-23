@@ -15,6 +15,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +42,6 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public void criarUsuario(UsuarioModel usuario) {
-
         buscarUsuarioPorEmail(usuario.getEmail()).ifPresentOrElse(
                 (usuarioModel) -> {
                     throw new ResponseStatusException(UNAUTHORIZED, "Email já cadastrado");
@@ -138,5 +138,12 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioModelDTO buscarUsuarioDTOPorId(String id) {
         UsuarioModel usuarioModel = buscarUsuarioPorId(id);
         return this.toUsuarioModelDTO(usuarioModel);
+    }
+
+    public UsuarioModel buscarUsuarioLogado() {
+        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return repository.findByEmail(username).orElseGet(() -> {
+            throw  new NaoEncontradoException("Usuario");
+        });
     }
 }

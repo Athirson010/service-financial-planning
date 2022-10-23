@@ -20,7 +20,6 @@ import java.util.Optional;
 
 public abstract class AbstractService<Model extends AbstractModel, Repository extends MongoRepository<Model, String>> {
     protected Repository repository;
-
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
