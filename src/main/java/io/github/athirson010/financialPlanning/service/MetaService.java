@@ -1,21 +1,18 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.dto.enums.Tipos;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.MetaModel;
 import io.github.athirson010.financialPlanning.repository.MetaRepository;
-import org.bson.io.BsonOutput;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Meta;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetaService extends AbstractService<MetaModel, MetaRepository>{
+public class MetaService extends AbstractService<MetaModel, MetaRepository> {
 
     @Autowired
-    private GastoService gastoService;
+    GastoService gastoService;
 
     public MetaService(MetaRepository repository) {
         super(MetaModel.class, repository);
@@ -23,14 +20,14 @@ public class MetaService extends AbstractService<MetaModel, MetaRepository>{
 
     @Override
     public MetaModel save(MetaModel model) {
-        save(model);
+        super.save(model);
         criarGastosMensaisParaMeta(model);
         return model;
     }
 
     private void criarGastosMensaisParaMeta(MetaModel model) {
         buscarDatasPagamentoMensais(model).forEach(pagamento -> {
-            GastoModel gasto = new GastoModel(model.getNome(),model.getTipo(), pagamento, model.getUsuarioModel(), (model.getValorBruto() / model.getParcelas()), model);
+            GastoModel gasto = new GastoModel(model.getNome(), model.getTipo(), pagamento, model.getUsuarioModel(), (model.getValorBruto() / model.getParcelas()), model);
             gastoService.save(gasto);
         });
     }
