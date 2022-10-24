@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/spending", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/gastos", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Gasto")
 @RestController
 public class GastosController extends RestSecurity {

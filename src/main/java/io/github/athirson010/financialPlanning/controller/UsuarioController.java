@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Usuario")
 @RestController
 public class UsuarioController extends RestSecurity {

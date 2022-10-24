@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/goal", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/meta", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Meta")
 @RestController
 public class MetaController extends RestSecurity {

@@ -1,5 +1,6 @@
 package io.github.athirson010.financialPlanning.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.domain.dto.enums.Tipos;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class MetaModel extends AbstractModel {
     private Double valorBruto;
     private Tipos tipo;
     private int parcelas;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate inicioPagamento;
     private UsuarioModel usuario;
 }
