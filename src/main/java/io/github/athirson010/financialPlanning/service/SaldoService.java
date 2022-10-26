@@ -22,6 +22,7 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
     GastoService gastoService;
     Double saldoMensal = 0.0;
     private List<Criteria> criterias = new ArrayList<>();
+
     public SaldoService(SaldoRepository repository) {
         super(SaldoModel.class, repository);
     }
@@ -32,6 +33,18 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         return super.save(model);
     }
 
+    public List<SaldoModel> buscarExtratoMensal(LocalDate data) {
+        criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
+        criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
+        criterias.add(new Criteria("data").lte(data.withDayOfMonth(31)));
+
+        Query query = new Query();
+        query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[]{})));
+
+        return mongoTemplate.find(query, SaldoModel.class);
+    }
+
+
     public Double buscarSaldoMensal(LocalDate data) {
         criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
@@ -40,14 +53,14 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         Query query = new Query();
         query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[]{})));
 
-         mongoTemplate.find(query, SaldoModel.class).forEach(saldo -> {
-             saldoMensal = saldoMensal + saldo.getValor();
-         });
+        mongoTemplate.find(query, SaldoModel.class).forEach(saldo -> {
+            saldoMensal = saldoMensal + saldo.getValor();
+        });
 
-         mongoTemplate.find(query, GastoModel.class).forEach(gasto ->{
-             saldoMensal = saldoMensal - gasto.getValor();
-         });
+        mongoTemplate.find(query, GastoModel.class).forEach(gasto -> {
+            saldoMensal = saldoMensal - gasto.getValor();
+        });
 
-         return saldoMensal;
+        return saldoMensal;
     }
 }

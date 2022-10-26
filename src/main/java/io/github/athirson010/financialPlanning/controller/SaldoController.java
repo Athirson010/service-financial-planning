@@ -1,6 +1,5 @@
 package io.github.athirson010.financialPlanning.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
@@ -12,8 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -45,8 +44,16 @@ public class SaldoController extends RestSecurity {
         service.deleteById(id);
     }
 
-    @GetMapping("consultar-saldo/{data}")
-    public Double getSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data ){ return service.buscarSaldoMensal(data);}
+    @GetMapping("consultar-gastos/{data}")
+    public Double getSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return service.buscarSaldoMensal(data);
+    }
+
+
+    @GetMapping("consultar-gastos/{data}")
+    public List<SaldoModel> getExtratoSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return service.buscarExtratoMensal(data);
+    }
 
 
 }

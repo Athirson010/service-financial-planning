@@ -6,10 +6,13 @@ import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.service.GastoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -39,5 +42,10 @@ public class GastosController extends RestSecurity {
     @DeleteMapping("/{id}")
     public void deleteGastoPorId(@PathVariable String id) {
         service.deleteById(id);
+    }
+
+    @GetMapping("consultar-gasto-mensal/{data}")
+    public List<GastoModel> getGastosMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        return service.buscarGastoMensal(data);
     }
 }
