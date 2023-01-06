@@ -23,7 +23,7 @@ public class GastosController extends RestSecurity {
     @Autowired
     private GastoService service;
 
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(CREATED)
     public GastoModel postCriarGasto(@Valid @RequestBody GastoModel gasto) {
         return service.save(gasto);

@@ -16,14 +16,14 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/saldo", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/saldos", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Saldo")
 @RestController
 public class SaldoController extends RestSecurity {
     @Autowired
     private SaldoService service;
 
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(CREATED)
     public SaldoModel postCriarSaldo(@Valid @RequestBody SaldoModel saldo) {
         return service.save(saldo);
@@ -50,7 +50,7 @@ public class SaldoController extends RestSecurity {
     }
 
 
-    @GetMapping("consultar-gastos/{data}")
+    @GetMapping("consultar-extrato-mensal/{data}")
     public List<SaldoModel> getExtratoSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         return service.buscarExtratoMensal(data);
     }

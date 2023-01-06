@@ -13,14 +13,14 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/meta", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/metas", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Meta")
 @RestController
 public class MetaController extends RestSecurity {
     @Autowired
     private MetaService service;
 
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(CREATED)
     public MetaModel postCriarMeta(@Valid @RequestBody MetaModel gasto) {
         return service.save(gasto);

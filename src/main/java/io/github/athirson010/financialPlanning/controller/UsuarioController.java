@@ -18,19 +18,19 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(value = "/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Usuario")
 @RestController
 public class UsuarioController extends RestSecurity {
     @Autowired
     private UsuarioService service;
 
-    @PostMapping("/auth")
+    @PostMapping("/autenticar")
     public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
         return service.certificar(credenciais);
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(CREATED)
     public void postCriarUsuario(@Valid @RequestBody UsuarioModel usuario) {
         service.criarUsuario(usuario);

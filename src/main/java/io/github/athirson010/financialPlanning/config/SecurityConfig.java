@@ -5,6 +5,7 @@ import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -44,6 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
+                .httpBasic().and()
+                .authorizeRequests()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/usuarios/autenticar").permitAll()
+                .antMatchers(HttpMethod.POST,"/usuarios").permitAll()
+                .and()
                 .csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated()
@@ -54,17 +63,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
         ;
     }
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(AUTH_WHITELIST);
-    }
-
-    public static final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/requestCode/**",
-            "/user/auth",
-            "/user/"
-    };
 }
