@@ -100,7 +100,6 @@
             <artifactId>opentelemetry-exporter-otlp-metrics</artifactId>
             <version>1.14.0</version>
         </dependency>
-
     </dependencies>
 
     <build>
