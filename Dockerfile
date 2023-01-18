@@ -1,5 +1,4 @@
 FROM openjdk:17-alpine
-
 ENV SERVICE_NAME "financial-planning"
 
 WORKDIR localtime
@@ -14,4 +13,4 @@ COPY target/*.jar .
 
 EXPOSE 8080
 EXPOSE 4317
-ENTRYPOINT ["java","-javaagent:/opentelemetry-javaagent-all.jar","-Dotel.exporter.otlp.endpoint=http://localhost:4317","-Dotel.resource.attributes=service.name=$SERVICE_NAME", "-jar", "./financialPlanning-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-javaagent:/opentelemetry-javaagent-all.jar", "-jar", "./financialPlanning-0.0.1-SNAPSHOT.jar"]
