@@ -14,9 +14,10 @@ services:
       - HOME=/data/db
     volumes:
       - /data/configdb
-      - /data/db
+        - /data/db
     ports:
-      - '27017:27017'
+      - "27017:27017"
+
   app-backend-financial:
     depends_on:
       - mongo
