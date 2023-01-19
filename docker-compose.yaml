@@ -1,4 +1,4 @@
-version: '1.0'
+version: '2.4'
 services:
   mongo:
     image: mongo:latest
@@ -12,9 +12,13 @@ services:
       - MONGO_MAJOR=6.0
       - MONGO_VERSION=6.0.3
       - HOME=/data/db
+    expose:
+      - "27017"
+    external_links:
+      - app-backend-financial
     volumes:
       - /data/configdb
-        - /data/db
+      - /data/db
     ports:
       - "27017:27017"
 
@@ -25,17 +29,11 @@ services:
     restart: on-failure
     environment:
       SPRING_APPLICATION_JSON: '{
-            "spring.data.mongodb.database":"planejamento-financeiro",
             "spring.data.mongodb.host":"localhost",
             "spring.data.mongodb.port":27017,
             "spring.data.mongodb.database":"planejamento-financeiro",
             "Dotel.exporter.otlp.endpoint":"http://localhost:4317",
             "Dotel.resource.attributes":"service.name=financial-planning"
           }'
-    links:
-      - mongo
     ports:
-      - '8080:8080'
-
-
-
+      - "8080:8080"
