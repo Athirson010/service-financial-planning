@@ -21,6 +21,7 @@ services:
       - "27017:27017"
 
   app-backend-financial:
+    container_name: app-backend-financial
     depends_on:
       - mongo
     image: financial-planning:latest
