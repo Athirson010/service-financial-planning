@@ -27,6 +27,11 @@ services:
     image: financial-planning:latest
     restart: on-failure
     environment:
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: https://20fd5b4c700d4377b7b1b97229539656.apm.us-central1.gcp.cloud.es.io:443
+      OTEL_EXPORTER_OTLP_HEADERS: Authorization=Bearer TI8chvPYR6u86v0QV5
+      OTEL_LOGS_EXPORTER_OTLP: otlp
+      OTEL_SERVICE_NAME: financial-planning
+
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_db",
             "spring.data.mongodb.port":27017,
