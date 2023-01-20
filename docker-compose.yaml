@@ -33,7 +33,7 @@ services:
       OTEL_TRACES_EXPORTER: otlp
       OTEL_METRICS_EXPORTER: otlp
       OTEL_LOGS_EXPORTER_OTLP: otlp
-      OTEL_SERVICE_NAME: Planejamento Financeiro
+      OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_db",
             "spring.data.mongodb.port":27017,
