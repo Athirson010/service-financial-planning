@@ -30,9 +30,7 @@ services:
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_db",
             "spring.data.mongodb.port":27017,
-            "spring.data.mongodb.database":"planejamento-financeiro",
-            "Dotel.exporter.otlp.endpoint":"http://localhost:4317",
-            "Dotel.resource.attributes":"service.name=financial-planning"
+            "spring.data.mongodb.database":"planejamento-financeiro"
           }'
     ports:
       - "8080:8080"
