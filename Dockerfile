@@ -12,5 +12,5 @@ RUN wget -O opentelemetry-javaagent-all.jar 'https://github.com/open-telemetry/o
 COPY target/*.jar .
 
 EXPOSE 8080
-EXPOSE 4317
-ENTRYPOINT ["java","-javaagent:/opentelemetry-javaagent-all.jar", "-jar", "./financialPlanning-0.0.1-SNAPSHOT.jar"]
+
+ENTRYPOINT ["java","-javaagent:/opentelemetry-javaagent-all.jar","-jar", "./financialPlanning-0.0.1-SNAPSHOT.jar"]
