@@ -3,6 +3,7 @@ package io.github.athirson010.financialPlanning.domain.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.domain.dto.enums.Tipos;
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

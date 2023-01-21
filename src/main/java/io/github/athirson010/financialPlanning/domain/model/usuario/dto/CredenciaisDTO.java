@@ -1,4 +1,4 @@
-package io.github.athirson010.financialPlanning.domain.dto;
+package io.github.athirson010.financialPlanning.domain.model.usuario.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package io.github.athirson010.financialPlanning.jwt;
 
-import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

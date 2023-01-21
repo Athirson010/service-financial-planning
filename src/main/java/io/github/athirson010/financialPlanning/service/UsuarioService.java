@@ -1,9 +1,9 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.dto.CredenciaisDTO;
-import io.github.athirson010.financialPlanning.domain.dto.TokenDTO;
-import io.github.athirson010.financialPlanning.domain.dto.UsuarioModelDTO;
-import io.github.athirson010.financialPlanning.domain.model.UsuarioModel;
+import io.github.athirson010.financialPlanning.domain.model.usuario.dto.CredenciaisDTO;
+import io.github.athirson010.financialPlanning.domain.dto.token.TokenDTO;
+import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
