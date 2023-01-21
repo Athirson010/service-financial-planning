@@ -18,6 +18,7 @@ public class CorsConfig implements WebMvcConfigurer {
     private Logger logger = LoggerFactory.getLogger(CorsConfig.class);
     @Autowired
     private ApplicationContext context;
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -27,27 +28,29 @@ public class CorsConfig implements WebMvcConfigurer {
             }
         };
     }
+
     @Bean
     public CommandLineRunner runner() throws Exception {
-            return args -> {
-                logger.info("RODANDO A CONFIGURAÇÃO DE DESENVOLVIMENTO");
-                System.out.println("RODANDO A CONFIGURAÇÃO DE DESENVOLVIMENTO");
-            };
+        return args -> {
+            logger.info("RODANDO A CONFIGURAÇÃO DE DESENVOLVIMENTO");
+            System.out.println("RODANDO A CONFIGURAÇÃO DE DESENVOLVIMENTO");
+        };
     }
 
     @Bean
-    public SmartInitializingSingleton execAntesInjecaoDependencia(){
+    public SmartInitializingSingleton execAntesInjecaoDependencia() {
         return this::execAntesInjecaoDependenciaTexto;
     }
 
-    public void execAntesInjecaoDependenciaTexto(){
+    public void execAntesInjecaoDependenciaTexto() {
         int banana = 1;
         logger.info("ANTES DA INJEÇÃO!");
-        if (banana != 1){
+        if (banana != 1) {
             closeApplication();
         }
     }
-    private void closeApplication(){
+
+    private void closeApplication() {
         SpringApplication.exit(context);
     }
 

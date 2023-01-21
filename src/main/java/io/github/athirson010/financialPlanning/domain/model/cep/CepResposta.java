@@ -1,4 +1,5 @@
 package io.github.athirson010.financialPlanning.domain.model.cep;
+
 import lombok.Data;
 
 @Data

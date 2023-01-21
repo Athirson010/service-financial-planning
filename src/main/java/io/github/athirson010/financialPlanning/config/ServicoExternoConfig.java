@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ServicoExternoConfig {
     @Bean
     @Qualifier("viaCepClient")
-    public WebClient viaCepClient(@Value("${viaCep.url}") String url){
+    public WebClient viaCepClient(@Value("${viaCep.url}") String url) {
         return WebClient.builder()
                 .baseUrl(url)
                 .build();

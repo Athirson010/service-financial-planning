@@ -11,12 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @Tag(name = "Buscar CEP")
 public class CepController extends RestSecurity {
@@ -26,5 +22,7 @@ public class CepController extends RestSecurity {
     @GetMapping(path = "/{cep}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(content = @Content(schema = @Schema(implementation = CepResposta.class)))
-    public Mono<CepResposta> buscarListaCep(@PathVariable String cep) { return service.buscarCepExterno(cep); }
+    public Mono<CepResposta> buscarListaCep(@PathVariable String cep) {
+        return service.buscarCepExterno(cep);
+    }
 }
