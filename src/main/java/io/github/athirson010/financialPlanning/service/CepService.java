@@ -15,10 +15,11 @@ public class CepService {
     Logger logger = LoggerFactory.getLogger(CepService.class);
     @Autowired
     @Qualifier("viaCepClient")
-    protected WebClient webClient;
+    public WebClient webClient;
     private static final String CEP_PATH = "json";
 
     public Mono<CepResposta> buscarCepExterno(String cep) {
+        cep.replace("-", "");
         return Mono.deferContextual(contextView -> webClient.get()
                 .uri(uriBuilder -> uriBuilder.pathSegment(cep).path(CEP_PATH).build())
                 .retrieve()
