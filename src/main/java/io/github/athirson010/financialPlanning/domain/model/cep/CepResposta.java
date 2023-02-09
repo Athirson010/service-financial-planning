@@ -1,9 +1,9 @@
 package io.github.athirson010.financialPlanning.domain.model.cep;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class CepResposta {
     private String cep;
