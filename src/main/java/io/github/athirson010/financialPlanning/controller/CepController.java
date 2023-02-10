@@ -24,6 +24,6 @@ public class CepController extends RestSecurity {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(content = @Content(schema = @Schema(implementation = CepResposta.class)))
     public Mono<CepResposta> buscarListaCep(@PathVariable String cep) {
-        return service.buscarCepExterno(cep);
+        return service.buscarDetalhesEnderecoPorCep(cep);
     }
 }
