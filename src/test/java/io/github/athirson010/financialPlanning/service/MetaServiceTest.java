@@ -1,6 +1,5 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.dto.enums.Tipos;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.MetaModel;
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
@@ -9,35 +8,36 @@ import io.github.athirson010.financialPlanning.repository.MetaRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+
 import static io.github.athirson010.financialPlanning.domain.dto.enums.Tipos.DIVERSAO;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class MetaServiceTest {
+    @Mock
+    MetaRepository metaRepository;
 
-    private MetaRepository metaRepository;
-
-    @MockBean
-    private GastoRespository gastoRespository;
-    @Autowired
-    private MetaService metaService;
+    @Mock
+    GastoRespository gastoRespository;
 
     @MockBean
-    private GastoService gastoService;
+    GastoService gastoService;
 
     @MockBean
-    private UsuarioService usuarioService;
+    UsuarioService usuarioService;
+
+    @InjectMocks
+    MetaService metaService;
 
     private static MetaModel metaModel;
     private static UsuarioModel usuarioModel;
@@ -45,18 +45,15 @@ class MetaServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        usuarioModel = new UsuarioModel("teste@teste.com","teste","12345678",false, LocalDate.now());
-        metaModel =  new MetaModel("Viagem", "Viagem",1000.0, DIVERSAO, 10, LocalDate.now(), usuarioModel);
-        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(),usuarioModel ,10.0,null);
+        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", false, LocalDate.now());
+        metaModel = new MetaModel("Viagem", "Viagem", 1000.0, DIVERSAO, 10, LocalDate.now(), usuarioModel);
+        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, 10.0, null);
     }
 
     @Test
     void deve_salvar_uma_meta() {
         when(gastoService.save(Mockito.any(GastoModel.class))).thenReturn(gastoModel);
         when(usuarioService.buscarUsuarioLogado()).thenReturn(usuarioModel);
-
-        when(metaRepository.save(Mockito.any(MetaModel.class))).thenReturn(metaModel);
-        when(gastoRespository.save(Mockito.any(GastoModel.class))).thenReturn(gastoModel);
 
         MetaModel metaSalva = metaService.save(metaModel);
 

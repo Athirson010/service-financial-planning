@@ -7,7 +7,6 @@ import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;

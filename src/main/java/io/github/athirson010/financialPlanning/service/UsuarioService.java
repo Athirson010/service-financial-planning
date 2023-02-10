@@ -33,10 +33,13 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class UsuarioService implements UserDetailsService {
     @Autowired
     UsuarioRepository repository;
+
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private PasswordEncoder encoder;
+
     @Autowired
     private JwtService jwtService;
 

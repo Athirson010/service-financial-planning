@@ -1,6 +1,8 @@
 package io.github.athirson010.financialPlanning.domain.model.cep;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -1,11 +1,9 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.dto.enums.Tipos;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.repository.GastoRespository;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.athirson010.financialPlanning.domain.dto.enums.Tipos.*;
+import static io.github.athirson010.financialPlanning.domain.dto.enums.Tipos.DIVERSAO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -29,19 +27,23 @@ import static org.mockito.Mockito.when;
 public class GastoServiceTest {
     @Mock
     private GastoRespository gastoRespository;
+
     @Mock
     private MongoTemplate template;
+
     @Mock
     private UsuarioService usuarioService;
+
     @InjectMocks
     private GastoService gastoService;
-    private static UsuarioModel usuarioModel;
 
+    private static UsuarioModel usuarioModel;
     private static GastoModel gastoModel;
+
     @BeforeAll
     static void beforeAll() {
-        usuarioModel = new UsuarioModel("teste@teste.com","teste","12345678",false, LocalDate.now());
-        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(),usuarioModel ,10.0,null);
+        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", false, LocalDate.now());
+        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, 10.0, null);
     }
 
     @Test
