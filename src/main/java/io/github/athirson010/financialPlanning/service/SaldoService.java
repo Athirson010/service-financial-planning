@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +35,13 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
     }
 
     public List<SaldoModel> buscarExtratoMensal(LocalDate data) {
+
+        YearMonth month = YearMonth.from(data);
+        int ultimoDiadoMes = month.atEndOfMonth().getDayOfMonth();
+
         criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
-        criterias.add(new Criteria("data").lte(data.withDayOfMonth(31)));
+        criterias.add(new Criteria("data").lte(data.withDayOfMonth(ultimoDiadoMes)));
 
         Query query = new Query();
         query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[]{})));
@@ -44,11 +49,13 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         return mongoTemplate.find(query, SaldoModel.class);
     }
 
-
     public Double buscarSaldoMensal(LocalDate data) {
+        YearMonth month = YearMonth.from(data);
+        int ultimoDiadoMes = month.atEndOfMonth().getDayOfMonth();
+
         criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
-        criterias.add(new Criteria("data").lte(data.withDayOfMonth(31)));
+        criterias.add(new Criteria("data").lte(data.withDayOfMonth(ultimoDiadoMes)));
 
         Query query = new Query();
         query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[]{})));
@@ -63,4 +70,5 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
 
         return saldoMensal;
     }
+
 }
