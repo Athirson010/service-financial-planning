@@ -7,8 +7,8 @@ import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioM
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
+import io.github.athirson010.financialPlanning.mapper.UsuarioMapper;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -35,13 +35,13 @@ public class UsuarioService implements UserDetailsService {
     UsuarioRepository repository;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    UsuarioMapper mapper;
 
     @Transactional
     public void criarUsuario(UsuarioModel usuario) {
@@ -54,7 +54,7 @@ public class UsuarioService implements UserDetailsService {
                 });
     }
 
-    private Optional<UsuarioModel> buscarUsuarioPorEmail(String email) {
+    public Optional<UsuarioModel> buscarUsuarioPorEmail(String email) {
         return repository.findByEmail(email);
     }
 
@@ -96,7 +96,7 @@ public class UsuarioService implements UserDetailsService {
 
     public Page<UsuarioModelDTO> buscarTodosUsuarios(UsuarioModelDTO filter, Pageable pageable) {
 
-        UsuarioModel filterMapeado = modelMapper.map(filter, UsuarioModel.class);
+        UsuarioModel filterMapeado = mapper.toUsuarioModel(filter);
 
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
@@ -105,7 +105,8 @@ public class UsuarioService implements UserDetailsService {
 
         Example<UsuarioModel> example = Example.of(filterMapeado, matcher);
 
-        Page<UsuarioModelDTO> usuariosPage = repository.findAll(example, pageable).map(this::toUsuarioModelDTO);
+        Page<UsuarioModelDTO> usuariosPage = repository.findAll(example, pageable)
+                .map(mapper::toUsuarioModelDTO);
 
         if (usuariosPage.getContent().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
@@ -118,15 +119,11 @@ public class UsuarioService implements UserDetailsService {
         repository.deleteById(id);
     }
 
-    public UsuarioModelDTO toUsuarioModelDTO(UsuarioModel usuarioModel) {
-        return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
-    }
-
     public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
         buscarUsuarioPorId(id);
         user.setSenha(encoder.encode(user.getSenha()));
         user.setId(id);
-        return this.toUsuarioModelDTO(repository.save(user));
+        return mapper.toUsuarioModelDTO(repository.save(user));
     }
 
     public UsuarioModel buscarUsuarioPorId(String id) {
@@ -135,12 +132,12 @@ public class UsuarioService implements UserDetailsService {
 
     public UsuarioModelDTO buscarUsuarioDTOPorEmail(String email) {
         UsuarioModel usuarioModel = buscarUsuarioPorEmail(email).orElseThrow(() -> new NaoEncontradoException("E-mail"));
-        return this.toUsuarioModelDTO(usuarioModel);
+        return mapper.toUsuarioModelDTO(usuarioModel);
     }
 
     public UsuarioModelDTO buscarUsuarioDTOPorId(String id) {
         UsuarioModel usuarioModel = buscarUsuarioPorId(id);
-        return this.toUsuarioModelDTO(usuarioModel);
+        return mapper.toUsuarioModelDTO(usuarioModel);
     }
 
     public UsuarioModel buscarUsuarioLogado() {

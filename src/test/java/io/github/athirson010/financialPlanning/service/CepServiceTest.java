@@ -21,7 +21,7 @@ import java.io.IOException;
 class CepServiceTest {
 
     private static final CepResposta cepModelo = CepRecursosTestes.gerarModeloSucesso();
-   public static MockWebServer mockApi;
+    public static MockWebServer mockApi;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -45,7 +45,7 @@ class CepServiceTest {
 
     @Test
     void buscarDetalhesEnderecoPorCep_sucesso() throws IOException {
-         mockApi = new MockWebServer();
+        mockApi = new MockWebServer();
         mockApi.start();
 
         String cep = "12.123-123";
