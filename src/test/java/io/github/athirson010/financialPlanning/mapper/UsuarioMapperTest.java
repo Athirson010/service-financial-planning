@@ -2,47 +2,41 @@ package io.github.athirson010.financialPlanning.mapper;
 
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
-import org.junit.jupiter.api.BeforeEach;
+import io.github.athirson010.financialPlanning.mapper.UsuarioMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-class UsuarioMapperTest {
-    @Mock
+public class UsuarioMapperTest {
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    @Autowired
     private ModelMapper modelMapper;
-
-    @MockBean
-    UsuarioMapper mapper;
-
-    private UsuarioModelDTO usuarioModelDTO;
-    private UsuarioModel usuarioModel;
-
-    @BeforeEach
-    public void setUp() {
-        usuarioModelDTO = UsuarioModelDTO.builder()
-                .id("1")
-                .email("email@email.com")
-                .dataNascimento(LocalDate.now())
-                .nome("teste")
-                .build();
-        usuarioModel = new UsuarioModel("email@example.com", "teste", "12345678", false, LocalDate.now());
-    }
 
     @Test
     public void testToUsuarioModelDTO() {
-        UsuarioModelDTO result = mapper.toUsuarioModelDTO(usuarioModel);
-        assertEquals(usuarioModelDTO, result);
-    }
+        UsuarioModel usuarioModel = new UsuarioModel("email@email.com", "user", "senha", false, LocalDate.now());
 
+        UsuarioModelDTO usuarioModelDTO = usuarioMapper.toUsuarioModelDTO(usuarioModel);
+
+        assertEquals(usuarioModel.getNome(), usuarioModelDTO.getNome());
+        assertEquals(usuarioModel.getEmail(), usuarioModelDTO.getEmail());
+       }
+
+    @Test
+    public void testToUsuarioModel() {
+        UsuarioModelDTO usuarioModelDTO = new UsuarioModelDTO("user", "email@email.com", "teste", LocalDate.now());
+        UsuarioModel usuarioModel = usuarioMapper.toUsuarioModel(usuarioModelDTO);
+
+        assertEquals(usuarioModelDTO.getNome(), usuarioModel.getNome());
+        assertEquals(usuarioModelDTO.getEmail(), usuarioModel.getEmail());
+    }
 }
