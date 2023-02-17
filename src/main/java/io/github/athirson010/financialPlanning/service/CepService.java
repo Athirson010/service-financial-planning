@@ -46,6 +46,7 @@ public class CepService {
                 .bodyToMono(CepResposta.class)
                 .flatMap(resposta -> {
                     if (resposta != null && Boolean.TRUE.equals(resposta.getErro())) {
+                        logger.error("cep não encontrado");
                         throw new ResponseStatusException(NOT_FOUND, "CEP nao encontrado");
                     }
                     return Mono.just(resposta);
@@ -56,8 +57,11 @@ public class CepService {
         cep = cep.replaceAll("\\D", "");
 
         if (cep.length() != 8) {
+            logger.error("cep invalido");
             throw new ResponseStatusException(BAD_REQUEST, "CEP invalido!");
         }
+
+        logger.info("CEP informado valido: " + cep);
         return cep;
     }
 }
