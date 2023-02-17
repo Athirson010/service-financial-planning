@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +15,16 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${security.jwt.expiracao}")
-    private String expiracao;
+    String expiracao;
 
     @Value("${security.jwt.chave-assinatura}")
-    private String chaveAssinatura;
+    String chaveAssinatura;
 
     public String gerarToken(UsuarioModel usuario) {
         long expString = Long.parseLong(expiracao);
+        logger.info("gerando token...");
         return Jwts
                 .builder()
                 .setSubject(usuario.getEmail())
@@ -41,8 +44,10 @@ public class JwtService {
     public Boolean tokenValido(String token) {
         try {
             obterClaims(token);
+            logger.info("token valido");
             return true;
         } catch (ExpiredJwtException e) {
+            logger.error("token invalido");
             return false;
         }
     }

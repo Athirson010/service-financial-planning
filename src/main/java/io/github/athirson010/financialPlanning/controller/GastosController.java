@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class GastosController extends RestSecurity {
     @Autowired
-    private GastoService service;
+    GastoService service;
 
     @PostMapping
     @ResponseStatus(CREATED)

@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 @RestController
 public class CepController extends RestSecurity {
     @Autowired
-    protected CepService service;
+    CepService service;
 
     @GetMapping(path = "/{cep}")
     @ResponseStatus(HttpStatus.OK)

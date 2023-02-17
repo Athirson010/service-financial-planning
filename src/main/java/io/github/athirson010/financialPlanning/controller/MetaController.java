@@ -33,7 +33,8 @@ public class MetaController extends RestSecurity {
 
     @GetMapping("/{id}")
     public MetaModel getMetaPorId(@PathVariable String id) {
-        return service.findById(id).orElseThrow(() -> new NaoEncontradoException("Gasto"));
+        return service.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Gasto"));
     }
 
     @DeleteMapping("/{id}")

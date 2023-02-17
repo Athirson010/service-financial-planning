@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class UsuarioController extends RestSecurity {
     @Autowired
-    private UsuarioService service;
+    UsuarioService service;
 
     @PostMapping("/autenticar")
     public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {

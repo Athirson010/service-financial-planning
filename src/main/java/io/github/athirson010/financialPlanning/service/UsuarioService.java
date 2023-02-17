@@ -9,6 +9,8 @@ import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
 import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.mapper.UsuarioMapper;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -31,14 +33,15 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class UsuarioService implements UserDetailsService {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     UsuarioRepository repository;
 
     @Autowired
-    private PasswordEncoder encoder;
+    PasswordEncoder encoder;
 
     @Autowired
-    private JwtService jwtService;
+    JwtService jwtService;
 
     @Autowired
     UsuarioMapper mapper;

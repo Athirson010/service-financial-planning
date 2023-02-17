@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class SaldoController extends RestSecurity {
     @Autowired
-    private SaldoService service;
+    SaldoService service;
 
     @PostMapping
     @ResponseStatus(CREATED)
