@@ -22,11 +22,11 @@ services:
     container_name: app-backend-financial
     depends_on:
       - mongo
-    image: financial-planning:latest
+    image: planejamento-financeiro:latest
     restart: on-failure
     environment:
       #OTEL_JAVAAGENT_DEBUG: true
-      OTEL_EXPORTER_OTLP_ENDPOINT: 'https://20fd5b4c700d4377b7b1b97229539656.apm.us-central1.gcp.cloud.es.io:443'
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'https://5cf8835e52ae457fbc8b733d1ce2aa22.apm.us-central1.gcp.cloud.es.io:443'
       OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Bearer 2fvefuceUgzD25O24N
       OTEL_TRACES_EXPORTER: otlp
       OTEL_METRICS_EXPORTER: otlp

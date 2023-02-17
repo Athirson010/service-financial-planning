@@ -11,7 +11,7 @@ ENV LANG=pt_br.UTF-8 LANGUAGE=pt_BR.UTF-8
 FROM openjdk:17-alpine
 WORKDIR ../
 RUN wget -O opentelemetry-javaagent-all.jar 'https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar'
-COPY target/*.jar .
+COPY --from=0 /target/*.jar .
 
 EXPOSE 8080
 
