@@ -21,9 +21,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UsuarioService usuarioService;
+    UsuarioService usuarioService;
     @Autowired
-    private JwtService jwtService;
+    JwtService jwtService;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {

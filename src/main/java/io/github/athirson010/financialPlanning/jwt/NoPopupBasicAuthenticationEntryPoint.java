@@ -8,12 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static javax.servlet.http.HttpServletResponse.*;
+
 public class NoPopupBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException, IOException {
-
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+        response.sendError(SC_UNAUTHORIZED, authException.getMessage());
     }
 
 }

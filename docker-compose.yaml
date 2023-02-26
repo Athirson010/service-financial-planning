@@ -5,13 +5,6 @@ services:
     restart: on-failure
     environment:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-      - GOSU_VERSION=1.12
-      - JSYAML_VERSION=3.13.1
-      - MONGO_PACKAGE=mongodb-org
-      - MONGO_REPO=repo.mongodb.org
-      - MONGO_MAJOR=6.0
-      - MONGO_VERSION=6.0.3
-      - HOME=/data/db
     volumes:
       - /data/configdb
       - /data/db
@@ -26,10 +19,10 @@ services:
     restart: on-failure
     environment:
       #OTEL_JAVAAGENT_DEBUG: true
-      OTEL_EXPORTER_OTLP_ENDPOINT: 'https://5cf8835e52ae457fbc8b733d1ce2aa22.apm.us-central1.gcp.cloud.es.io:443'
-      OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Bearer 2fvefuceUgzD25O24N
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://app_monitoring:4317'
+      #OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Bearer 2fvefuceUgzD25O24N
       OTEL_TRACES_EXPORTER: otlp
-      OTEL_METRICS_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
       OTEL_LOGS_EXPORTER_OTLP: otlp
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
@@ -41,5 +34,16 @@ services:
       - "8080:8080"
     links:
       - mongo:app_db
+      - jaeger:app_monitoring
 
-
+  jaeger:
+    container_name: jaeger-monitoring
+    image: jaegertracing/all-in-one:1.35
+    ports:
+      - "16686:16686"
+      - "16685:16685"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      #- LOG_LEVEL=debug
