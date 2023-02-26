@@ -5,11 +5,20 @@ services:
     restart: on-failure
     environment:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-    volumes:
-      - /data/configdb
-      - /data/db
     ports:
       - "27017:27017"
+
+  jaeger:
+    container_name: jaeger-monitoring
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "16685:16685"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      #- LOG_LEVEL=debug
 
   app-backend-financial:
     container_name: app-backend-financial
@@ -17,12 +26,18 @@ services:
       - mongo
     image: planejamento-financeiro:latest
     restart: on-failure
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     environment:
       #OTEL_JAVAAGENT_DEBUG: true
-      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://app_monitoring:4317'
       #OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Bearer 2fvefuceUgzD25O24N
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://app_monitoring:4317'
       OTEL_TRACES_EXPORTER: otlp
-      OTEL_METRICS_EXPORTER: none
+      OTEL_METRICS_EXPORTER: otlp
       OTEL_LOGS_EXPORTER_OTLP: otlp
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
@@ -36,14 +51,3 @@ services:
       - mongo:app_db
       - jaeger:app_monitoring
 
-  jaeger:
-    container_name: jaeger-monitoring
-    image: jaegertracing/all-in-one:1.35
-    ports:
-      - "16686:16686"
-      - "16685:16685"
-      - "4317:4317"
-      - "4318:4318"
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-      #- LOG_LEVEL=debug

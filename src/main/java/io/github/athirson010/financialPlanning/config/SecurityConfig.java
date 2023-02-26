@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v3/api-docs/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios/autenticar").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
