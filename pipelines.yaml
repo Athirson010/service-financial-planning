@@ -1,0 +1,16 @@
+entry-pipeline:
+  source:
+    otel_trace_source:
+      ssl: false
+      authentication:
+        unauthenticated:
+  processor:
+    - otel_trace_raw:
+  sink:
+    - opensearch:
+        hosts: [ "https://app-opensearch:9200" ]
+        insecure: true
+        username: admin
+        password: admin
+        index: testebalcao
+
