@@ -1,10 +1,17 @@
 entry-pipeline:
   source:
+    otel_metrics_source:
+      ssl: false
+      authentication:
+        unauthenticated:
+
     otel_trace_source:
       ssl: false
       authentication:
         unauthenticated:
+
   processor:
+    - otel_metrics_raw_processor:
     - otel_trace_raw:
   sink:
     - opensearch:
@@ -12,5 +19,7 @@ entry-pipeline:
         insecure: true
         username: admin
         password: admin
-        index: testebalcao
+        index: testebalcaocomplete
+
+
 
