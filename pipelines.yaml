@@ -1,9 +1,9 @@
 entry-pipeline:
   source:
-    otel_metrics_source:
-      ssl: false
-      authentication:
-        unauthenticated:
+    #otel_metrics_source:
+    # ssl: false
+    #authentication:
+    # unauthenticated:
 
     otel_trace_source:
       ssl: false
@@ -11,7 +11,7 @@ entry-pipeline:
         unauthenticated:
 
   processor:
-    - otel_metrics_raw_processor:
+    #  - otel_metrics_raw_processor:
     - otel_trace_raw:
   sink:
     - opensearch:

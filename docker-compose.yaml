@@ -8,15 +8,15 @@ services:
     ports:
       - "27017:27017"
 
-  jaeger:
-    container_name: jaeger-monitoring
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
+    # jaeger:
+    # container_name: jaeger-monitoring
+    # image: jaegertracing/all-in-one:latest
+    #  ports:
+    #    - "16686:16686"
+    #   - "4317:4317"
+    #   - "4318:4318"
+    # environment:
+    #   - COLLECTOR_OTLP_ENABLED=true
 
   app-backend-financial:
     container_name: app-backend-financial
@@ -55,7 +55,6 @@ services:
     command: [ --config=/etc/otel-collector-config.yaml ]
     depends_on:
       - app-data-prepper
-      - jaeger
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
@@ -67,7 +66,7 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
     links:
-      - jaeger:app-jaeger
+      - app-data-prepper:app-data-prepper
 
   app-data-prepper:
     container_name: app-data-prepper

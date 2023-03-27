@@ -4,11 +4,8 @@ receivers:
       grpc:
 
 exporters:
-  logging:
-    loglevel: debug
-
-  jaeger:
-    endpoint: app-jaeger:4317
+  otlp/data-prepper:
+    endpoint: app-data-prepper:4900
     tls:
       insecure: true
 
@@ -20,8 +17,4 @@ service:
     traces:
       receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ logging, jaeger ]
-      #metrics:
-      #receivers: [otlp]
-      #processors: [batch]
-      #exporters: [logging, jaeger]
+      exporters: [ otlp/data-prepper ]
