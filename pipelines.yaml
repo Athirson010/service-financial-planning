@@ -1,25 +1,15 @@
 entry-pipeline:
   source:
-    #otel_metrics_source:
-    # ssl: false
-    #authentication:
-    # unauthenticated:
-
     otel_trace_source:
       ssl: false
       authentication:
         unauthenticated:
-
-  processor:
-    #  - otel_metrics_raw_processor:
-    - otel_trace_raw:
   sink:
     - opensearch:
         hosts: [ "https://app-opensearch:9200" ]
         insecure: true
         username: admin
         password: admin
-        index: testebalcaocomplete
-
-
-
+        index: otel-v1-apm-span-teste
+        trace_analytics_raw: true
+        trace_analytics_service_map: true

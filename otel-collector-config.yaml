@@ -2,19 +2,21 @@ receivers:
   otlp:
     protocols:
       grpc:
+      http:
 
 exporters:
+  #logging:
   otlp/data-prepper:
-    endpoint: app-data-prepper:4900
+    endpoint: app-prepper:21890
     tls:
       insecure: true
-
-processors:
-  batch:
 
 service:
   pipelines:
     traces:
       receivers: [ otlp ]
-      processors: [ batch ]
       exporters: [ otlp/data-prepper ]
+    metrics:
+      receivers: [ otlp ]
+      exporters: [ otlp/data-prepper ]
+
