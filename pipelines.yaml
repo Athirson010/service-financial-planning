@@ -2,14 +2,65 @@ entry-pipeline:
   source:
     otel_trace_source:
       ssl: false
-      authentication:
-        unauthenticated:
+  buffer:
+    bounded_blocking:
+      buffer_size: 10240
+      batch_size: 160
+  sink:
+    - pipeline:
+        name: "raw-pipeline"
+    - pipeline:
+        name: "service-map-pipeline"
+raw-pipeline:
+  source:
+    pipeline:
+      name: "entry-pipeline"
+  processor:
+    - otel_trace_raw:
   sink:
     - opensearch:
         hosts: [ "https://app-opensearch:9200" ]
         insecure: true
         username: admin
         password: admin
-        index: otel-v1-apm-span-teste
-        trace_analytics_raw: true
-        trace_analytics_service_map: true
+        index_type: trace-analytics-raw
+service-map-pipeline:
+  source:
+    pipeline:
+      name: "entry-pipeline"
+  processor:
+    - service_map_stateful:
+  sink:
+    - opensearch:
+        hosts: [ "https://app-opensearch:9200" ]
+        insecure: true
+        username: admin
+        password: admin
+        index_type: trace-analytics-service-map
+
+log-pipeline:
+  source:
+    http:
+      ssl: false
+  processor:
+    - grok:
+        match:
+          log: [ "%{COMMONAPACHELOG}" ]
+  sink:
+    - opensearch:
+        hosts: [ "https://app-opensearch:9200" ]
+        insecure: true
+        username: admin
+        password: admin
+        index: apache_logs
+
+metrics-pipeline:
+  source:
+    otel_metrics_source:
+  processor:
+    - otel_metrics_raw_processor:
+  sink:
+    - opensearch:
+      hosts: [ "https://app-opensearch:9200" ]
+      username: admin
+      password: admin
