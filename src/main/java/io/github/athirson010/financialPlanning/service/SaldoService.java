@@ -35,9 +35,7 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
     }
 
     public List<SaldoModel> buscarExtratoMensal(LocalDate data) {
-
-        YearMonth month = YearMonth.from(data);
-        int ultimoDiadoMes = month.atEndOfMonth().getDayOfMonth();
+        int ultimoDiadoMes = buscarUltimoDiaDoMes(data);
 
         criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
@@ -50,8 +48,8 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
     }
 
     public Double buscarSaldoMensal(LocalDate data) {
-        YearMonth month = YearMonth.from(data);
-        int ultimoDiadoMes = month.atEndOfMonth().getDayOfMonth();
+
+        int ultimoDiadoMes = buscarUltimoDiaDoMes(data);
 
         criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
@@ -69,6 +67,11 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         });
 
         return saldoMensal;
+    }
+
+    int buscarUltimoDiaDoMes(LocalDate data) {
+        YearMonth month = YearMonth.from(data);
+        return month.atEndOfMonth().getDayOfMonth();
     }
 
 }
