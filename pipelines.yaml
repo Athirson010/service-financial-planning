@@ -1,4 +1,5 @@
 entry-pipeline:
+  delay: "100"
   source:
     otel_trace_source:
       ssl: false
@@ -24,7 +25,9 @@ raw-pipeline:
         username: admin
         password: admin
         index_type: trace-analytics-raw
+
 service-map-pipeline:
+  delay: "100"
   source:
     pipeline:
       name: "entry-pipeline"
@@ -52,15 +55,4 @@ log-pipeline:
         insecure: true
         username: admin
         password: admin
-        index: apache_logs
-
-metrics-pipeline:
-  source:
-    otel_metrics_source:
-  processor:
-    - otel_metrics_raw_processor:
-  sink:
-    - opensearch:
-      hosts: [ "https://app-opensearch:9200" ]
-      username: admin
-      password: admin
+        index: sample_app_logs
