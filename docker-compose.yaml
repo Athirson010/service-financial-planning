@@ -36,9 +36,9 @@ services:
       start_period: 40s
     environment:
       OTEL_JAVAAGENT_DEBUG: true
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://app_otlp-collector:4317
+      OTEL_EXPORTER_OTLP_ENDPOINT: app_otlp-collector:4317
       OTEL_TRACES_EXPORTER: otlp
-      OTEL_LOGS_EXPORTER_OTLP: otlp
+      # OTEL_LOGS_EXPORTER_OTLP: otlp
       OTEL_METRICS_EXPORTER: otlp
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
@@ -78,6 +78,8 @@ services:
       - ./pipelines.yaml:/usr/share/data-prepper/pipelines/pipelines.yaml
     ports:
       - 21890:21890
+      - 2021:2021
+      - 4900:4900
     links:
       - app-opensearch:app-opensearch
 
@@ -97,7 +99,7 @@ services:
     ports:
       - 5601:5601
     expose:
-      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
+      - "5601"
     environment:
       OPENSEARCH_HOSTS: https://app-opensearch:9200
     links:
