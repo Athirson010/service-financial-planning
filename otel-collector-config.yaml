@@ -5,9 +5,9 @@ receivers:
       http:
 
 exporters:
-  #logging:
-  otlp/data-prepper:
-    endpoint: app-prepper:21890
+  logging: { }
+  otlp:
+    endpoint: 'app-data-prepper:21890'
     tls:
       insecure: true
 
@@ -15,8 +15,10 @@ service:
   pipelines:
     traces:
       receivers: [ otlp ]
-      exporters: [ otlp/data-prepper ]
-    metrics:
+      exporters: [ otlp ]
+      #metrics:
+      #receivers: [ otlp ]
+      #exporters: [ otlp ]
+    logs:
       receivers: [ otlp ]
-      exporters: [ otlp/data-prepper ]
-
+      exporters: [ otlp ]

@@ -8,20 +8,6 @@ services:
     ports:
       - "27017:27017"
 
-  #  jaeger:
-  #    container_name: jaeger-monitoring
-  #    image: jaegertracing/all-in-one:latest
-  #    ports:
-  #      - "16686:16686"
-  #      - "14250:14250"
-  #      - "16685:16685"
-  #      - "14268:14268"
-  #      - "4317:4317"
-  #      - "4318:4318"
-  #   # environment:
-  #      #- COLLECTOR_OTLP_ENABLED=true
-  #      #LOG_LEVEL=debug
-
   app-backend-financial:
     container_name: app-backend-financial
     depends_on:
@@ -35,11 +21,12 @@ services:
       retries: 5
       start_period: 40s
     environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://app-otlp-collector:4317
       OTEL_JAVAAGENT_DEBUG: true
-      OTEL_EXPORTER_OTLP_ENDPOINT: app_otlp-collector:4317
       OTEL_TRACES_EXPORTER: otlp
-      # OTEL_LOGS_EXPORTER_OTLP: otlp
-      OTEL_METRICS_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER_OTLP: otlp
+      # OTEL_METRICS_EXPORTER: otlp
+      OTEL_JAVAAGENT_LOGGING: application
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_mongo",
@@ -50,7 +37,7 @@ services:
       - "8080:8080"
     links:
       - mongo:app_mongo
-      - app-otlp-collector:app_otlp-collector
+      - app-otlp-collector:app-otlp-collector
 
   app-otlp-collector:
     container_name: app-otlp-collector
@@ -68,7 +55,7 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
     links:
-      - app-data-prepper:app-prepper
+      - app-data-prepper:app-data-prepper
 
   app-data-prepper:
     container_name: app-data-prepper
