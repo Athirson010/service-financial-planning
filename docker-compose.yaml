@@ -25,8 +25,8 @@ services:
       OTEL_JAVAAGENT_DEBUG: true
       OTEL_TRACES_EXPORTER: otlp
       OTEL_LOGS_EXPORTER_OTLP: otlp
-      # OTEL_METRICS_EXPORTER: otlp
-      OTEL_JAVAAGENT_LOGGING: application
+      OTEL_METRICS_EXPORTER: none
+      OTEL_JAVAAGENT_LOGGING: simple
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_mongo",

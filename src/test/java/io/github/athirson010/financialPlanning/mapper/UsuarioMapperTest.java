@@ -2,7 +2,6 @@ package io.github.athirson010.financialPlanning.mapper;
 
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
-import io.github.athirson010.financialPlanning.mapper.UsuarioMapper;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class UsuarioMapperTest {
 
         assertEquals(usuarioModel.getNome(), usuarioModelDTO.getNome());
         assertEquals(usuarioModel.getEmail(), usuarioModelDTO.getEmail());
-       }
+    }
 
     @Test
     public void testToUsuarioModel() {

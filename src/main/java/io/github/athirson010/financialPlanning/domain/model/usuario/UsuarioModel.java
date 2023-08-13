@@ -30,9 +30,7 @@ public class UsuarioModel extends AbstractModel {
     @Size(min = 8)
     @NotEmpty
     private String senha;
-
     private Boolean admin;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 }
