@@ -1,6 +1,5 @@
 package io.github.athirson010.financialPlanning.controller;
 
-import io.github.athirson010.financialPlanning.controller.security.RestSecurity;
 import io.github.athirson010.financialPlanning.domain.model.cep.CepResposta;
 import io.github.athirson010.financialPlanning.service.CepService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +15,7 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Buscar CEP")
 @RequestMapping(value = "/cep", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class CepController extends RestSecurity {
+public class CepController {
     @Autowired
     CepService service;
 
