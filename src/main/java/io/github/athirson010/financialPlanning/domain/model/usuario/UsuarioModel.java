@@ -20,7 +20,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioModel extends AbstractModel {
-
     @Email()
     private String email;
 
@@ -31,6 +30,7 @@ public class UsuarioModel extends AbstractModel {
     @NotEmpty
     private String senha;
     private Boolean admin;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 }

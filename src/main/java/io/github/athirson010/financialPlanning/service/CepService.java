@@ -18,9 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 @Service
 public class CepService {
     Logger logger = LoggerFactory.getLogger(CepService.class);
-    @Autowired
     protected WebClient webClient;
-
     @Value("${viaCep.url}")
     public String viacepApiUrl;
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="JsonOutput" target="SYSTEM_OUT">
+            <JsonLayout complete="false" includeStacktrace="false" compact="true" properties="false" eventEol="true">
+                <KeyValuePair key="serviceName" value="service-financial-planning"/>
+                <KeyValuePair key="url" value="$${ctx:url:-}"/>
+                <KeyValuePair key="httpStatusCode" value="$${ctx:http.status.code:-}"/>
+                <KeyValuePair key="info" value="$${ctx:info:-}"/>
+                <KeyValuePair key="erro" value="$${ctx:erro:-}"/>
+            </JsonLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="JsonOutput" level="info"/>
+            <AppenderRef ref="JsonOutput" level="error"/>
+            <AppenderRef ref="JsonOutput" level="warn"/>
+        </Root>
+    </Loggers>
+</Configuration>
