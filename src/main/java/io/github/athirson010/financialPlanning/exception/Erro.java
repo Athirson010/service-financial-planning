@@ -7,5 +7,5 @@ import java.util.List;
 
 @Getter
 public class Erro {
-    private List<String> errosEncontrados = new ArrayList<>();
+    private final List<String> errosEncontrados = new ArrayList<>();
 }

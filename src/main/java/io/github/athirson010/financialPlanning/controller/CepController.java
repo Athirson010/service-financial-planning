@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
+
 
 @Tag(name = "Buscar CEP")
 @RequestMapping(value = "/cep", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,7 +22,7 @@ public class CepController {
     @GetMapping(path = "/{cep}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(content = @Content(schema = @Schema(implementation = CepResposta.class)))
-    public Mono<CepResposta> buscarListaCep(@PathVariable String cep) {
+    public CepResposta buscarListaCep(@PathVariable String cep) {
         return service.buscarDetalhesEnderecoPorCep(cep);
     }
 }

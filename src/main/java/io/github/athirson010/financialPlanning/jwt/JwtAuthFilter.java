@@ -1,21 +1,21 @@
 package io.github.athirson010.financialPlanning.jwt;
 
 import io.github.athirson010.financialPlanning.service.UsuarioService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private JwtService jwtService;
-    private UsuarioService usuarioService;
+    private final JwtService jwtService;
+    private final UsuarioService usuarioService;
 
     public JwtAuthFilter(JwtService jwtService, UsuarioService usuarioService) {
         this.jwtService = jwtService;
@@ -47,9 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private boolean validarToken(String authorization) {
         if (authorization != null && authorization.startsWith("Bearer")) {
             String token = authorization.split(" ")[1];
-            if (jwtService.tokenValido(token)) {
-                return true;
-            }
+            return jwtService.tokenValido(token);
         }
         return false;
     }

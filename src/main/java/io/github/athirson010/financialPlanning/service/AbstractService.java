@@ -27,9 +27,10 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     protected Class<Model> beanClass;
     @Value("${findall.max.results}")
     private Integer findAllMaxResults;
-    private String ACCENT_STRINGS = "àáâãäåßòóôõöøèéêëðçÐìíîïùúûüñšÿýž";
-    private String NO_ACCENT_STRINGS = "aaaaaabooooooeeeeecdiiiiuuuunsyyz";
+    private final String ACCENT_STRINGS = "àáâãäåßòóôõöøèéêëðçÐìíîïùúûüñšÿýž";
+    private final String NO_ACCENT_STRINGS = "aaaaaabooooooeeeeecdiiiiuuuunsyyz";
     private Model modelGenerico;
+
     public AbstractService(Class<Model> beanClass, Repository repository) {
         this.beanClass = beanClass;
         this.repository = repository;
@@ -112,7 +113,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
         int pagesToAdd = pagesAhead + 1;
         long countNextPage = mongoTemplate.find(query.with(PageRequest.of(page + pagesToAdd, size)), beanClass).size();
         if (countNextPage > 0) {
-            countNextPage += size * (pagesToAdd);
+            countNextPage += (long) size * (pagesToAdd);
         } else {
             for (int i = 0; i < pagesToAdd; i++) {
                 long count = mongoTemplate.find(query.with(PageRequest.of(page + pagesAhead - i, size)), beanClass).size();
@@ -123,7 +124,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
                 }
             }
         }
-        countNextPage += size * page;
+        countNextPage += (long) size * page;
         return countNextPage;
     }
 

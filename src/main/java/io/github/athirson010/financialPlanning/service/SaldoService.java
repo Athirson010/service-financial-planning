@@ -22,7 +22,7 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
     @Autowired
     GastoService gastoService;
     Double saldoMensal = 0.0;
-    private List<Criteria> criterias = new ArrayList<>();
+    private final List<Criteria> criterias = new ArrayList<>();
 
     public SaldoService(SaldoRepository repository) {
         super(SaldoModel.class, repository);

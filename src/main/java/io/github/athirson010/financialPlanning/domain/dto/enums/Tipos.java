@@ -3,6 +3,7 @@ package io.github.athirson010.financialPlanning.domain.dto.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public enum Tipos {
     META("meta"),
@@ -10,7 +11,6 @@ public enum Tipos {
     DIVERSAO("diversao"),
     SAUDE("saude");
 
-    @Getter
     private String value;
 
 
