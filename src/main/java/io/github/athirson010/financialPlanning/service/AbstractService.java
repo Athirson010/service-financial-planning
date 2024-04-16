@@ -30,7 +30,6 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     private String ACCENT_STRINGS = "àáâãäåßòóôõöøèéêëðçÐìíîïùúûüñšÿýž";
     private String NO_ACCENT_STRINGS = "aaaaaabooooooeeeeecdiiiiuuuunsyyz";
     private Model modelGenerico;
-
     public AbstractService(Class<Model> beanClass, Repository repository) {
         this.beanClass = beanClass;
         this.repository = repository;

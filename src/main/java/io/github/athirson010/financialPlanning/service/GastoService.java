@@ -16,9 +16,7 @@ public class GastoService extends AbstractService<GastoModel, GastoRespository> 
     @Autowired
     UsuarioService usuarioService;
     private List<Criteria> criterias = new ArrayList<>();
-
     private Double gastoMensal = 0.0;
-
     public GastoService(GastoRespository repository) {
         super(GastoModel.class, repository);
     }
