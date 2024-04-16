@@ -2,7 +2,9 @@ package io.github.athirson010.financialPlanning.domain.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.domain.model.jwt.Role;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,13 +17,19 @@ import java.util.stream.Collectors;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioModel implements UserDetails {
+@Getter
+@Setter
+public class UsuarioModel extends AbstractModel implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
     private String username;
 
     private String password;
+
+    @Email
+    private String email;
+    private String senha;
 
     @Getter
     @Setter

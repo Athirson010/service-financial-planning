@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,10 +36,10 @@ public class CepService {
         return webClient.get()
                 .uri(url)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError,
+                .onStatus(HttpStatusCode::is4xxClientError,
                         error -> Mono.error(
                                 new ResponseStatusException(NOT_FOUND, "CEP nao encontrado")))
-                .onStatus(HttpStatus::is5xxServerError,
+                .onStatus(HttpStatusCode::is5xxServerError,
                         error -> Mono.error(
                                 new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao invocar o servico do via CEP")))
                 .bodyToMono(CepResposta.class)

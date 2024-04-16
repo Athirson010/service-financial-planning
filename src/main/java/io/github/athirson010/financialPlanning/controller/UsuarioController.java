@@ -35,6 +35,13 @@ public class UsuarioController {
     private PBKDF2Encoder passwordEncoder;
     private UsuarioService userService;
 
+    public UsuarioController(UsuarioService service, JwtUtil jwtUtil, PBKDF2Encoder passwordEncoder, UsuarioService userService) {
+        this.service = service;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
+
     @PostMapping("/autenticar")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
         return userService.findByUsername(ar.getUsername())

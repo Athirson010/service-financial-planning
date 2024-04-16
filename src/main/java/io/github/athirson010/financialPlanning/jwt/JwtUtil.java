@@ -1,5 +1,6 @@
 package io.github.athirson010.financialPlanning.jwt;
 
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -46,7 +47,7 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(UsuarioModel user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRoles());
         return doGenerateToken(claims, user.getUsername());

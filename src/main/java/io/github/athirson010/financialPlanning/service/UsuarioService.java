@@ -47,63 +47,38 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     UsuarioMapper mapper;
 
-    private Map<String, User> data;
+    @Transactional
+    public void criarUsuario(UsuarioModel usuario) {
+        buscarUsuarioPorEmail(usuario.getEmail()).ifPresentOrElse(
+                (usuarioModel) -> {
+                    throw new ResponseStatusException(UNAUTHORIZED, "Email já cadastrado");
+                }, () -> {
+                    usuario.setSenha(encoder.encode(usuario.getSenha()));
+                    repository.save(usuario);
+                });
+    }
 
-
-//    @Transactional
-//    public void criarUsuario(UsuarioModel usuario) {
-//        buscarUsuarioPorEmail(usuario.getEmail()).ifPresentOrElse(
-//                (usuarioModel) -> {
-//                    throw new ResponseStatusException(UNAUTHORIZED, "Email já cadastrado");
-//                }, () -> {
-//                    usuario.setSenha(encoder.encode(usuario.getSenha()));
-//                    repository.save(usuario);
-//                });
-//    }
-
-    public Mono<User> findByUsername(String username) {
-        return Mono.justOrEmpty(data.get(username));
+    public Mono<UsuarioModel> findByUsername(String username) {
+        return Mono.justOrEmpty(loadUserByUsername(username));
     }
 
     public Optional<UsuarioModel> buscarUsuarioPorEmail(String email) {
         return repository.findByEmail(email);
     }
 
-//    public UserDetails autenticar(UsuarioModel usuario) {
-//        UserDetails user = loadUserByUsername(usuario.getEmail());
-//
-//        if (encoder.matches(usuario.getSenha(), user.getPassword())) {
-//            return user;
-//        }
-//        throw new SenhaInvalidaException();
-//    }
+    public UserDetails autenticar(UsuarioModel usuario) {
+        UserDetails user = loadUserByUsername(usuario.getEmail());
 
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        UsuarioModel usuario = repository.findByEmail(username)
-//                .orElseThrow(() -> new NaoEncontradoException("Usuário"));
-//
-//        String[] roles = new String[]{"USER"};
-//
-//        return User
-//                .builder()
-//                .username(usuario.getEmail())
-//                .password(usuario.getSenha())
-//                .roles(roles)
-//                .build();
-//    }
+        if (encoder.matches(usuario.getSenha(), user.getPassword())) {
+            return user;
+        }
+        throw new SenhaInvalidaException();
+    }
 
-//    public TokenDTO certificar(CredenciaisDTO credenciais) {
-//        try {
-//            UsuarioModel usuario = UsuarioModel.builder()
-//                    .email(credenciais.getEmail())
-//                    .senha(credenciais.getSenha()).build();
-//            autenticar(usuario);
-//            String token = jwtService.gerarToken(usuario);
-//            return new TokenDTO(usuario.getEmail(), token);
-//        } catch (UsernameNotFoundException | SenhaInvalidaException e) {
-//            throw new ResponseStatusException(UNAUTHORIZED, e.getMessage());
-//        }
-//    }
+    public UsuarioModel loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByEmail(username)
+                .orElseThrow(() -> new NaoEncontradoException("Usuário"));
+    }
 
     public Page<UsuarioModelDTO> buscarTodosUsuarios(UsuarioModelDTO filter, Pageable pageable) {
 
@@ -130,12 +105,12 @@ public class UsuarioService implements UserDetailsService {
         repository.deleteById(id);
     }
 
-//    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
-//        buscarUsuarioPorId(id);
-//        user.setSenha(encoder.encode(user.getSenha()));
-//        user.setId(id);
-//        return mapper.toUsuarioModelDTO(repository.save(user));
-//    }
+    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
+        buscarUsuarioPorId(id);
+        user.setSenha(encoder.encode(user.getSenha()));
+        user.setId(id);
+        return mapper.toUsuarioModelDTO(repository.save(user));
+    }
 
     public UsuarioModel buscarUsuarioPorId(String id) {
         return repository.findById(id).orElseThrow(() -> new NaoEncontradoException("Usuario"));
@@ -158,8 +133,5 @@ public class UsuarioService implements UserDetailsService {
         });
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
+
 }
