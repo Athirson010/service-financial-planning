@@ -9,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,13 +20,22 @@ public class CorsConfig implements WebMvcConfigurer {
     @Autowired
     ApplicationContext context;
 
-    @Override
+    @Configuration
+    @EnableWebFlux
+    public class CORSFilter implements WebFluxConfigurer {
+
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*");
+        }
+    }
+
+/*    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
                 .addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*");
-    }
+    }*/
 
 /*    @Bean
     public WebMvcConfigurer corsConfigurer() {
