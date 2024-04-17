@@ -1,10 +1,9 @@
 package io.github.athirson010.financialPlanning.service;
 
+import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.repository.SaldoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -17,28 +16,27 @@ import java.util.List;
 
 
 @Service
-public class SaldoService {
-
+public class SaldoService extends AbstractService {
     private AutenticacaoService autenticacaoService;
-
     private GastoService gastoService;
+    private SaldoRepository repository;
 
-    private MongoTemplate mongoTemplate;
-
-    public SaldoService(AutenticacaoService autenticacaoService, GastoService gastoService, MongoTemplate mongoTemplate) {
+    public SaldoService(AutenticacaoService autenticacaoService,
+                        GastoService gastoService,
+                        SaldoRepository repository) {
+        super(SaldoModel.class, repository);
         this.autenticacaoService = autenticacaoService;
         this.gastoService = gastoService;
-        this.mongoTemplate = mongoTemplate;
+        this.repository = repository;
     }
 
     private final List<Criteria> criterias = new ArrayList<>();
     BigDecimal saldoMensal;
 
-/*    @Override
-    public SaldoModel save(SaldoModel model) {
+    public AbstractModel save(SaldoModel model) {
         model.setUsuario(autenticacaoService.buscarUsuarioLogado());
         return super.save(model);
-    }*/
+    }
 
     public List<SaldoModel> buscarExtratoMensal(LocalDate data) {
         int ultimoDiadoMes = buscarUltimoDiaDoMes(data);

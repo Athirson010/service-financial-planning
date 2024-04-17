@@ -2,8 +2,6 @@ package io.github.athirson010.financialPlanning.service;
 
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.repository.GastoRespository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -13,18 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GastoService {
-    private MongoTemplate mongoTemplate;
-    private GastoRespository gastoRespository;
+public class GastoService extends AbstractService {
+    private GastoRespository respository;
     private UsuarioService usuarioService;
     private AutenticacaoService autenticacaoService;
 
-    public GastoService(MongoTemplate mongoTemplate,
-                        GastoRespository gastoRespository,
+    public GastoService(GastoRespository respository,
                         UsuarioService usuarioService,
                         AutenticacaoService autenticacaoService) {
-        this.mongoTemplate = mongoTemplate;
-        this.gastoRespository = gastoRespository;
+        super(GastoModel.class, respository);
+        this.repository = respository;
         this.usuarioService = usuarioService;
         this.autenticacaoService = autenticacaoService;
     }

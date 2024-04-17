@@ -1,21 +1,20 @@
 package io.github.athirson010.financialPlanning.controller;
 
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
-import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.service.SaldoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.CREATED;
 
 @RequestMapping(value = "/saldos", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Saldo")
