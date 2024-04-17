@@ -33,9 +33,9 @@ public class SaldoService extends AbstractService {
     private final List<Criteria> criterias = new ArrayList<>();
     BigDecimal saldoMensal;
 
-    public AbstractModel save(SaldoModel model) {
+    public SaldoModel save(SaldoModel model) {
         model.setUsuario(autenticacaoService.buscarUsuarioLogado());
-        return super.save(model);
+        return (SaldoModel) super.save(model);
     }
 
     public List<SaldoModel> buscarExtratoMensal(LocalDate data) {

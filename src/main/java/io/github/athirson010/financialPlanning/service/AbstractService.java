@@ -15,13 +15,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class AbstractService<Model extends AbstractModel, Repository extends MongoRepository<Model, String>> {
     protected Repository repository;
     @Autowired
     protected MongoTemplate mongoTemplate;
     protected Class<Model> beanClass;
+    protected String CONTEXTO;
     @Value("${findall.max.results}")
     private Integer findAllMaxResults;
     private final String ACCENT_STRINGS = "àáâãäåßòóôõöøèéêëðçÐìíîïùúûüñšÿýž";
@@ -31,6 +31,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     public AbstractService(Class<Model> beanClass, Repository repository) {
         this.beanClass = beanClass;
         this.repository = repository;
+        this.CONTEXTO = buscarContexto(beanClass.getName());
     }
 
     public List<Model> saveAll(List<Model> models) {
@@ -48,7 +49,6 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
             return repository.findAll(PageRequest.of(page, size)).getContent();
         }
     }
-
     public Page<Model> findAllPage(Integer page, Integer size) {
         if (page == null || size == null) {
             return new PageImpl<>(repository.findAll());
@@ -62,33 +62,19 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
     }
 
     public Model update(String id, Model model) {
-        this.findById(id).ifPresentOrElse(
-                (objeto) -> {
-                    model.setId(id);
-                    modelGenerico = save(model);
-                },
-                () -> {
-                    throw new NaoEncontradoException(buscarContexto(beanClass.getName()));
-                });
+        this.findById(id);
+        model.setId(id);
+        modelGenerico = save(model);
         return modelGenerico;
     }
 
     public void deleteById(String id) {
-        findById(id).ifPresentOrElse(
-                (usuarioModel) -> {
-                    repository.deleteById(id);
-                }, () -> {
-                    throw new NaoEncontradoException(buscarContexto(beanClass.getName()));
-                });
+        findById(id);
+        repository.deleteById(id);
     }
 
-    public Optional<Model> findById(String id) {
-        Optional<Model> optionalBean = repository.findById(id);
-        if (optionalBean.isPresent()) {
-            Model model = optionalBean.get();
-            return Optional.of(model);
-        }
-        return Optional.empty();
+    public Model findById(String id) {
+        return repository.findById(id).orElseThrow(() -> new NaoEncontradoException(CONTEXTO));
     }
 
     public void deleteAll() {
@@ -127,24 +113,24 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
 
     protected String accentToRegexForMongoDBRegexSearch(String text) {
         text = text.toLowerCase();
-        String output = "";
+        StringBuilder output = new StringBuilder();
 
         char[] charArray = text.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
             int indexOfNoAccent = NO_ACCENT_STRINGS.indexOf(charArray[i]);
             if (indexOfNoAccent != -1) {
                 int accentIndex = NO_ACCENT_STRINGS.indexOf(NO_ACCENT_STRINGS.charAt(indexOfNoAccent));
-                output += "[" + NO_ACCENT_STRINGS.charAt(accentIndex) + ACCENT_STRINGS.charAt(accentIndex);
+                output.append("[").append(NO_ACCENT_STRINGS.charAt(accentIndex)).append(ACCENT_STRINGS.charAt(accentIndex));
                 while (accentIndex <= NO_ACCENT_STRINGS.length() && charArray[i] == NO_ACCENT_STRINGS.charAt(accentIndex)) {
-                    output += ACCENT_STRINGS.charAt(accentIndex);
+                    output.append(ACCENT_STRINGS.charAt(accentIndex));
                     accentIndex++;
                 }
-                output += "]";
+                output.append("]");
             } else {
-                output += charArray[i];
+                output.append(charArray[i]);
             }
         }
-        return output;
+        return output.toString();
     }
 
     protected Query handleSort(Query query, String sortField, Integer sortOrder) {
