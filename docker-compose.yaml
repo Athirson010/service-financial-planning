@@ -7,6 +7,18 @@ services:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
     ports:
       - "27017:27017"
+  rabbit:
+    image: "rabbitmq:3-management"
+    networks:
+      - net-backend
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SW"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 
   app-backend-financial:
     container_name: app-backend-financial
@@ -14,6 +26,8 @@ services:
       - mongo
     image: service-financial-planning:latest
     restart: on-failure
+    networks:
+      - net-backend
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
@@ -31,13 +45,19 @@ services:
       SPRING_APPLICATION_JSON: '{
             "spring.data.mongodb.host":"app_mongo",
             "spring.data.mongodb.port":27017,
-            "spring.data.mongodb.database":"planejamento-financeiro"
+            "spring.data.mongodb.database":"planejamento-financeiro",
+            "spring.rabbitmq.host":"app_rabbit",
+            "spring.rabbitmq.port":"5672",
+            "spring.rabbitmq.username":"rabbitmq",
+            "spring.rabbitmq.password":"rabbitmq",
+            "queue.name":"teste"
           }'
     ports:
       - "8080:8080"
     links:
       - mongo:app_mongo
       - app-otlp-collector:app-otlp-collector
+      - rabbit:app_rabbit
 
   app-otlp-collector:
     container_name: app-otlp-collector
@@ -91,13 +111,6 @@ services:
       OPENSEARCH_HOSTS: https://app-opensearch:9200
     links:
       - app-opensearch:app-opensearch
-  rabbit:
-    image: "rabbitmq:3-management"
-    environment:
-      RABBITMQ_ERLANG_COOKIE: "SW"
-      RABBITMQ_DEFAULT_USER: "rabbitmq"
-      RABBITMQ_DEFAULT_PASS: "rabbitmq"
-      RABBITMQ_DEFAULT_VHOST: "/"
-    ports:
-      - 15672:15672
-      - 5672:5672
+
+networks:
+  net-backend:
