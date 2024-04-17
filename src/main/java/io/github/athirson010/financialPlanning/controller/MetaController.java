@@ -20,14 +20,14 @@ public class MetaController {
     @Autowired
     private MetaService service;
 
-
+/*
     @PostMapping
     @ResponseStatus(CREATED)
     public MetaModel postCriarMeta(@Valid @RequestBody MetaModel gasto) {
         return service.save(gasto);
     }
 
-    @PutMapping(path = "/{id}")
+   @PutMapping(path = "/{id}")
     public MetaModel putAtualizarMeta(@PathVariable String id, @Valid @RequestBody MetaModel gasto) {
         return service.update(id, gasto);
     }
@@ -41,5 +41,5 @@ public class MetaController {
     @DeleteMapping("/{id}")
     public void deleteMetaPorId(@PathVariable String id) {
         service.deleteById(id);
-    }
+    }*/
 }

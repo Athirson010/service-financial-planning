@@ -25,7 +25,7 @@ public class SaldoController {
     @Autowired
     private SaldoService service;
 
-    @PostMapping
+/*    @PostMapping
     @ResponseStatus(CREATED)
     public SaldoModel postCriarSaldo(@Valid @RequestBody SaldoModel saldo) {
         return service.save(saldo);
@@ -44,7 +44,7 @@ public class SaldoController {
     @DeleteMapping("/{id}")
     public void deleteSaldoPorId(@PathVariable String id) {
         service.deleteById(id);
-    }
+    }*/
 
     @GetMapping("consultar-gastos/{data}")
     public BigDecimal getSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {

@@ -3,6 +3,7 @@ package io.github.athirson010.financialPlanning.service;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.repository.GastoRespository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -12,21 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GastoService extends AbstractService<GastoModel, GastoRespository> {
-    public GastoService(Class<GastoModel> beanClass, GastoRespository repository) {
-        super(beanClass, repository);
+public class GastoService {
+    private MongoTemplate mongoTemplate;
+    private GastoRespository gastoRespository;
+    private UsuarioService usuarioService;
+    private AutenticacaoService autenticacaoService;
+
+    public GastoService(MongoTemplate mongoTemplate,
+                        GastoRespository gastoRespository,
+                        UsuarioService usuarioService,
+                        AutenticacaoService autenticacaoService) {
+        this.mongoTemplate = mongoTemplate;
+        this.gastoRespository = gastoRespository;
+        this.usuarioService = usuarioService;
+        this.autenticacaoService = autenticacaoService;
     }
 
-    @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
-    private AutenticacaoService autenticacaoService;
     private List<Criteria> criterias = new ArrayList<>();
-    @Override
-    public GastoModel save(GastoModel model) {
-        model.setUsuario(autenticacaoService.buscarUsuarioLogado());
-        return super.save(model);
-    }
+
     public List<GastoModel> buscarGastoMensal(LocalDate data) {
         criterias.add(new Criteria("usuario").is(autenticacaoService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));

@@ -24,7 +24,7 @@ public class GastosController {
 
     @Autowired
     private GastoService service;
-
+/*
     @PostMapping
     @ResponseStatus(CREATED)
     public GastoModel postCriarGasto(@Valid @RequestBody GastoModel gasto) {
@@ -45,6 +45,7 @@ public class GastosController {
     public void deleteGastoPorId(@PathVariable String id) {
         service.deleteById(id);
     }
+    */
 
     @GetMapping("consultar-gasto-mensal/{data}")
     public List<GastoModel> getGastosMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
