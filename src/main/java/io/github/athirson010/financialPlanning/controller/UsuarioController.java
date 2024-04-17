@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
-    @Autowired
     private UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping
     public ResponseEntity<Void> criar(@RequestBody @Valid UsuarioCriacaoDTO usuarioCriacaoDto) {

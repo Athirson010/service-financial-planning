@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CepController {
     private final CepService service;
-
     public CepController(CepService service) {
         this.service = service;
     }
-
     @GetMapping(path = "/{cep}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(content = @Content(schema = @Schema(implementation = CepResposta.class)))

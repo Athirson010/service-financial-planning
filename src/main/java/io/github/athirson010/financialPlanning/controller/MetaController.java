@@ -17,8 +17,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class MetaController {
-    @Autowired
+
     private MetaService service;
+
+    public MetaController(MetaService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)

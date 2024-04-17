@@ -22,8 +22,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class SaldoController {
-    @Autowired
     private SaldoService service;
+
+    public SaldoController(SaldoService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)
