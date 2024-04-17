@@ -15,7 +15,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class MetaController {
-
     private MetaService service;
 
     public MetaController(MetaService service) {

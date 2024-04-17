@@ -8,11 +8,11 @@ import lombok.Data;
 @Data
 public class UsuarioCriacaoDTO {
     @Size(min = 3, max = 10)
-    @Schema(description = "Nome do usuário", example = "Reis")
+    @Schema(description = "Nome do usuário", example = "Athirson")
     private String nome;
 
     @Email
-    @Schema(description = "Email do usuário", example = "rafael.reis@sptech.school")
+    @Schema(description = "Email do usuário", example = "athirson@teste.com")
     private String email;
 
     @Size(min = 6, max = 20)

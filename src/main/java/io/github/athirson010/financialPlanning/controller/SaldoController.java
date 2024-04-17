@@ -57,5 +57,10 @@ public class SaldoController {
         return service.buscarExtratoMensal(data);
     }
 
+    @GetMapping("consultar-extrato-mensal/entrada")
+    public List<SaldoModel> getExtratoSaltoMensalEntrada() {
+        return service.findAll();
+    }
+
 
 }
