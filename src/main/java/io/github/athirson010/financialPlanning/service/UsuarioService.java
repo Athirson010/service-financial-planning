@@ -1,152 +1,63 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.dto.token.TokenDTO;
+import io.github.athirson010.financialPlanning.config.jwt.GerenciamentoTokenJwt;
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioLoginDTO;
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioTokenDTO;
+import io.github.athirson010.financialPlanning.domain.dto.usuario.UsuarioCriacaoDTO;
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.CredenciaisDTO;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
-import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
-import io.github.athirson010.financialPlanning.exception.SenhaInvalidaException;
-import io.github.athirson010.financialPlanning.jwt.JwtService;
 import io.github.athirson010.financialPlanning.mapper.UsuarioMapper;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
-public class UsuarioService implements UserDetailsService {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    UsuarioRepository repository;
+public class UsuarioService {
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtService jwtService;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
-    UsuarioMapper mapper;
+    private GerenciamentoTokenJwt gerenciadorTokenJwt;
 
-    @Transactional
-    public void criarUsuario(UsuarioModel usuario) {
-        buscarUsuarioPorEmail(usuario.getEmail()).ifPresentOrElse(
-                (usuarioModel) -> {
-                    throw new ResponseStatusException(UNAUTHORIZED, "Email já cadastrado");
-                }, () -> {
-                    usuario.setSenha(encoder.encode(usuario.getSenha()));
-                    repository.save(usuario);
-                });
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    public void criar(UsuarioCriacaoDTO usuarioCriacaoDto) {
+        final UsuarioModel novoUsuario = UsuarioMapper.of(usuarioCriacaoDto);
+
+        String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
+        novoUsuario.setSenha(senhaCriptografada);
+
+        this.usuarioRepository.save(novoUsuario);
     }
 
-    public Optional<UsuarioModel> buscarUsuarioPorEmail(String email) {
-        return repository.findByEmail(email);
-    }
+    public UsuarioTokenDTO autenticar(UsuarioLoginDTO usuarioLoginDto) {
 
-    public UserDetails autenticar(UsuarioModel usuario) {
-        UserDetails user = loadUserByUsername(usuario.getEmail());
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
 
-        if (encoder.matches(usuario.getSenha(), user.getPassword())) {
-            return user;
-        }
-        throw new SenhaInvalidaException();
-    }
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UsuarioModel usuario = repository.findByEmail(username)
-                .orElseThrow(() -> new NaoEncontradoException("Usuário"));
+        UsuarioModel usuarioAutenticado =
+                usuarioRepository.findByEmail(usuarioLoginDto.getEmail())
+                        .orElseThrow(
+                                () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
+                        );
 
-        String[] roles = new String[]{"USER"};
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return User
-                .builder()
-                .username(usuario.getEmail())
-                .password(usuario.getSenha())
-                .roles(roles)
-                .build();
-    }
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-    public TokenDTO certificar(CredenciaisDTO credenciais) {
-        try {
-            UsuarioModel usuario = UsuarioModel.builder()
-                    .email(credenciais.getEmail())
-                    .senha(credenciais.getSenha()).build();
-            autenticar(usuario);
-            String token = jwtService.gerarToken(usuario);
-            return new TokenDTO(usuario.getEmail(), token);
-        } catch (UsernameNotFoundException | SenhaInvalidaException e) {
-            throw new ResponseStatusException(UNAUTHORIZED, e.getMessage());
-        }
-    }
-
-    public Page<UsuarioModelDTO> buscarTodosUsuarios(UsuarioModelDTO filter, Pageable pageable) {
-
-        UsuarioModel filterMapeado = mapper.toUsuarioModel(filter);
-
-        ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-
-        Example<UsuarioModel> example = Example.of(filterMapeado, matcher);
-
-        Page<UsuarioModelDTO> usuariosPage = repository.findAll(example, pageable)
-                .map(mapper::toUsuarioModelDTO);
-
-        if (usuariosPage.getContent().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-        return usuariosPage;
-    }
-
-    public void deletarUsuario(String id) {
-        buscarUsuarioPorId(id);
-        repository.deleteById(id);
-    }
-
-    public UsuarioModelDTO atualizarDadosUsuario(String id, UsuarioModel user) {
-        buscarUsuarioPorId(id);
-        user.setSenha(encoder.encode(user.getSenha()));
-        user.setId(id);
-        return mapper.toUsuarioModelDTO(repository.save(user));
-    }
-
-    public UsuarioModel buscarUsuarioPorId(String id) {
-        return repository.findById(id).orElseThrow(() -> new NaoEncontradoException("Usuario"));
-    }
-
-    public UsuarioModelDTO buscarUsuarioDTOPorEmail(String email) {
-        UsuarioModel usuarioModel = buscarUsuarioPorEmail(email).orElseThrow(() -> new NaoEncontradoException("E-mail"));
-        return mapper.toUsuarioModelDTO(usuarioModel);
-    }
-
-    public UsuarioModelDTO buscarUsuarioDTOPorId(String id) {
-        UsuarioModel usuarioModel = buscarUsuarioPorId(id);
-        return mapper.toUsuarioModelDTO(usuarioModel);
-    }
-
-    public UsuarioModel buscarUsuarioLogado() {
-        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        return repository.findByEmail(username).orElseGet(() -> {
-            throw new NaoEncontradoException("Usuario");
-        });
+        return UsuarioMapper.of(usuarioAutenticado, token);
     }
 }

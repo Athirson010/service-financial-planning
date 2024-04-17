@@ -1,7 +1,6 @@
 package io.github.athirson010.financialPlanning.service;
 
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

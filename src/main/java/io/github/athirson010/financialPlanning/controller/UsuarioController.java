@@ -2,8 +2,6 @@ package io.github.athirson010.financialPlanning.controller;
 
 import io.github.athirson010.financialPlanning.domain.dto.token.TokenDTO;
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.CredenciaisDTO;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

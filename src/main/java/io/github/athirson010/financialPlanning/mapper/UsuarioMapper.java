@@ -1,22 +1,30 @@
 package io.github.athirson010.financialPlanning.mapper;
 
-import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
-import io.github.athirson010.financialPlanning.domain.model.usuario.dto.UsuarioModelDTO;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioTokenDTO;
+import io.github.athirson010.financialPlanning.domain.dto.usuario.UsuarioCriacaoDTO;
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
+
 public class UsuarioMapper {
 
-    @Autowired
-    ModelMapper modelMapper;
+    public static UsuarioModel of(UsuarioCriacaoDTO usuarioCriacaoDto) {
+        UsuarioModel usuario = new UsuarioModel();
 
-    public UsuarioModelDTO toUsuarioModelDTO(UsuarioModel usuarioModel) {
-        return modelMapper.map(usuarioModel, UsuarioModelDTO.class);
+        usuario.setEmail(usuarioCriacaoDto.getEmail());
+        usuario.setNome(usuarioCriacaoDto.getNome());
+        usuario.setSenha(usuarioCriacaoDto.getSenha());
+
+        return usuario;
     }
 
-    public UsuarioModel toUsuarioModel(UsuarioModelDTO dto) {
-        return modelMapper.map(dto, UsuarioModel.class);
+    public static UsuarioTokenDTO of(UsuarioModel usuario, String token) {
+        UsuarioTokenDTO usuarioTokenDto = new UsuarioTokenDTO();
+
+        usuarioTokenDto.setUserId(Long.valueOf(usuario.getId()));
+        usuarioTokenDto.setEmail(usuario.getEmail());
+        usuarioTokenDto.setNome(usuario.getNome());
+        usuarioTokenDto.setToken(token);
+
+        return usuarioTokenDto;
     }
 }
