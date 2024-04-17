@@ -1,7 +1,6 @@
 package io.github.athirson010.financialPlanning.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -61,8 +60,4 @@ public class CorsConfig implements WebMvcConfigurer {
         SpringApplication.exit(context);
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 }

@@ -3,6 +3,8 @@ package io.github.athirson010.financialPlanning.service;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.MetaModel;
 import io.github.athirson010.financialPlanning.repository.MetaRepository;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,24 +14,16 @@ import java.util.List;
 
 @Service
 public class MetaService extends AbstractService<MetaModel, MetaRepository> {
-    GastoService gastoService;
-    AutenticacaoService autenticacaoService;
-    MetaRepository repository;
-    public MetaService(Class<MetaModel> beanClass,
-                       MetaRepository repository,
-                       GastoService gastoService,
-                       AutenticacaoService autenticacaoService) {
+    public MetaService(Class<MetaModel> beanClass, MetaRepository repository) {
         super(beanClass, repository);
-
-        this.repository = repository;
-        this.gastoService = gastoService;
-        this.autenticacaoService = autenticacaoService;
     }
 
-    public MetaService(MetaRepository repository) {
-        super(MetaModel.class, repository);
-    }
-
+    @Autowired
+    private GastoService gastoService;
+    @Autowired
+    private AutenticacaoService autenticacaoService;
+    @Autowired
+    private MetaRepository repository;
     @Override
     public MetaModel save(MetaModel model) {
         model.setUsuario(autenticacaoService.buscarUsuarioLogado());

@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class GastoServiceTest {
     private MongoTemplate template;
 
     @Mock
-    private UsuarioService usuarioService;
+    private AutenticacaoService autenticacaoService;
 
     @InjectMocks
     private GastoService gastoService;
@@ -42,14 +43,14 @@ public class GastoServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", false, LocalDate.now());
-        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, 10.0, null);
+        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", LocalDate.now());
+        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, BigDecimal.valueOf(10), null);
     }
 
     @Test
     public void testSave() {
         gastoModel.setUsuario(null);
-        when(usuarioService.buscarUsuarioLogado()).thenReturn(usuarioModel);
+        when(autenticacaoService.buscarUsuarioLogado()).thenReturn(usuarioModel);
         when(gastoRespository.save(gastoModel)).thenReturn(gastoModel);
 
         GastoModel result = gastoService.save(gastoModel);
@@ -64,7 +65,7 @@ public class GastoServiceTest {
         List<GastoModel> gastoModels = new ArrayList<>();
         gastoModels.add(gastoModel);
 
-        when(usuarioService.buscarUsuarioLogado()).thenReturn(usuarioModel);
+        when(autenticacaoService.buscarUsuarioLogado()).thenReturn(usuarioModel);
         when(template.find(any(Query.class), any(Class.class))).thenReturn(gastoModels);
 
         List<GastoModel> result = gastoService.buscarGastoMensal(LocalDate.parse("2018-12-27"));

@@ -16,21 +16,14 @@ import java.util.List;
 
 @Service
 public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
+
+    public SaldoService(SaldoRepository repository) {
+        super(SaldoModel.class, repository);
+    }
     AutenticacaoService autenticacaoService;
     GastoService gastoService;
     BigDecimal saldoMensal;
     private final List<Criteria> criterias = new ArrayList<>();
-
-    public SaldoService(Class<SaldoModel> beanClass,
-                        SaldoRepository repository,
-                        AutenticacaoService autenticacaoService,
-                        GastoService gastoService) {
-
-        super(beanClass, repository);
-        this.autenticacaoService = autenticacaoService;
-        this.gastoService = gastoService;
-    }
-
 
     @Override
     public SaldoModel save(SaldoModel model) {

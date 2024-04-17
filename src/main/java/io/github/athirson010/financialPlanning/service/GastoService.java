@@ -2,6 +2,7 @@ package io.github.athirson010.financialPlanning.service;
 
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.repository.GastoRespository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -12,25 +13,20 @@ import java.util.List;
 
 @Service
 public class GastoService extends AbstractService<GastoModel, GastoRespository> {
-
-    UsuarioService usuarioService;
-    private final AutenticacaoService autenticacaoService;
-    private final List<Criteria> criterias = new ArrayList<>();
-
-    public GastoService(GastoRespository repository,
-                        UsuarioService usuarioService,
-                        AutenticacaoService autenticacaoService) {
-        super(GastoModel.class, repository);
-        this.usuarioService = usuarioService;
-        this.autenticacaoService = autenticacaoService;
+    public GastoService(Class<GastoModel> beanClass, GastoRespository repository) {
+        super(beanClass, repository);
     }
 
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private AutenticacaoService autenticacaoService;
+    private List<Criteria> criterias = new ArrayList<>();
     @Override
     public GastoModel save(GastoModel model) {
         model.setUsuario(autenticacaoService.buscarUsuarioLogado());
         return super.save(model);
     }
-
     public List<GastoModel> buscarGastoMensal(LocalDate data) {
         criterias.add(new Criteria("usuario").is(autenticacaoService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));

@@ -4,6 +4,7 @@ import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioDe
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,12 +15,8 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
-
-    private final UsuarioRepository usuarioRepository;
-
-    public AutenticacaoService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,7 +24,6 @@ public class AutenticacaoService implements UserDetailsService {
         Optional<UsuarioModel> usuarioOpt = usuarioRepository.findByEmail(username);
 
         if (usuarioOpt.isEmpty()) {
-
             throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
         }
 

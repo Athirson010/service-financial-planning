@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static io.github.athirson010.financialPlanning.domain.dto.enums.Tipos.DIVERSAO;
@@ -34,7 +35,7 @@ class MetaServiceTest {
     GastoService gastoService;
 
     @MockBean
-    UsuarioService usuarioService;
+    AutenticacaoService autenticacaoService;
 
     @InjectMocks
     MetaService metaService;
@@ -45,15 +46,15 @@ class MetaServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", false, LocalDate.now());
-        metaModel = new MetaModel("Viagem", "Viagem", 1000.0, DIVERSAO, 10, LocalDate.now(), usuarioModel);
-        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, 10.0, null);
+        usuarioModel = new UsuarioModel("teste@teste.com", "teste", "12345678", LocalDate.now());
+        metaModel = new MetaModel("Viagem", "Viagem", BigDecimal.valueOf(1000.0), DIVERSAO, 10, LocalDate.now(), usuarioModel);
+        gastoModel = new GastoModel("teste", DIVERSAO, LocalDate.now(), usuarioModel, BigDecimal.valueOf(10.0), null);
     }
 
     @Test
     void deve_salvar_uma_meta() {
         when(gastoService.save(Mockito.any(GastoModel.class))).thenReturn(gastoModel);
-        when(usuarioService.buscarUsuarioLogado()).thenReturn(usuarioModel);
+        when(autenticacaoService.buscarUsuarioLogado()).thenReturn(usuarioModel);
 
         MetaModel metaSalva = metaService.save(metaModel);
 
