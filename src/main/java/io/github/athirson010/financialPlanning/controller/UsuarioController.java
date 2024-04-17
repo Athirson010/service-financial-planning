@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
-
-
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {

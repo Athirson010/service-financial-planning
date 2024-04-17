@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -19,9 +20,9 @@ import java.time.LocalDate;
 public class MetaModel extends AbstractModel {
     private String nome;
     private String descricao;
-    private Double valorBruto;
+    private BigDecimal valorBruto;
     private Tipos tipo;
-    private int parcelas;
+    private Integer parcelas;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate inicioPagamento;
     private UsuarioModel usuario;

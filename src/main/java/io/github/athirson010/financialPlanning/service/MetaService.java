@@ -6,6 +6,7 @@ import io.github.athirson010.financialPlanning.repository.MetaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,8 @@ public class MetaService extends AbstractService<MetaModel, MetaRepository> {
 
     private void criarGastosMensaisParaMeta(MetaModel model) {
         buscarDatasPagamentoMensais(model).forEach(pagamento -> {
-            gastoService.save(new GastoModel(model.getNome(), model.getTipo(), pagamento, model.getUsuario(), (model.getValorBruto() / model.getParcelas()), model));
+            gastoService.save(new GastoModel(model.getNome(), model.getTipo(), pagamento, model.getUsuario(),
+                    (model.getValorBruto().divide(BigDecimal.valueOf(model.getParcelas()))), model));
         });
     }
 
