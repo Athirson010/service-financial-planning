@@ -91,3 +91,13 @@ services:
       OPENSEARCH_HOSTS: https://app-opensearch:9200
     links:
       - app-opensearch:app-opensearch
+  rabbit:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SW"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 15672:15672
+      - 5672:5672
