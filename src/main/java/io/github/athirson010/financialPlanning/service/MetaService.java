@@ -12,16 +12,16 @@ import java.util.List;
 
 @Service
 public class MetaService extends AbstractService<MetaModel, MetaRepository> {
-
     GastoService gastoService;
     AutenticacaoService autenticacaoService;
-
+    MetaRepository repository;
     public MetaService(Class<MetaModel> beanClass,
                        MetaRepository repository,
                        GastoService gastoService,
                        AutenticacaoService autenticacaoService) {
         super(beanClass, repository);
 
+        this.repository = repository;
         this.gastoService = gastoService;
         this.autenticacaoService = autenticacaoService;
     }
