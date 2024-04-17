@@ -62,7 +62,7 @@ class MetaServiceTest {
         assertThat(metaSalva).isNotNull();
         assertThat(metaSalva.getNome()).isEqualTo("Viagem");
         assertThat(metaSalva.getTipo()).isEqualTo(DIVERSAO);
-        assertThat(metaSalva.getValorBruto()).isEqualTo(1000.0);
+        assertThat(metaSalva.getValorBruto()).isEqualTo(BigDecimal.valueOf(1000.0));
         assertThat(metaSalva.getParcelas()).isEqualTo(10);
     }
 
