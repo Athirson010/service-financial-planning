@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EventoPedidos {
-
     @RabbitListener(queues = {"${queue.name}"})
     public void receive(@Payload String fileBody) {
         System.out.println("Message " + fileBody);

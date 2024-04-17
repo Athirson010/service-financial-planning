@@ -6,7 +6,6 @@ import io.github.athirson010.financialPlanning.service.SaldoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class SaldoController {
-    @Autowired
-    SaldoService service;
+    private final SaldoService service;
+
+    public SaldoController(SaldoService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)
@@ -49,7 +51,6 @@ public class SaldoController {
     public Double getSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         return service.buscarSaldoMensal(data);
     }
-
 
     @GetMapping("consultar-extrato-mensal/{data}")
     public List<SaldoModel> getExtratoSaltoMensal(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {

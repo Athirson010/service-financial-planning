@@ -6,7 +6,6 @@ import io.github.athirson010.financialPlanning.service.MetaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +16,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class MetaController {
-    @Autowired
-    private MetaService service;
+
+    private final MetaService service;
+
+    public MetaController(MetaService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)

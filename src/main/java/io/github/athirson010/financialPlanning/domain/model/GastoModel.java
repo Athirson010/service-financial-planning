@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Document(value = "gasto")
@@ -23,6 +24,6 @@ public class GastoModel extends AbstractModel {
     private LocalDate data;
 
     private UsuarioModel usuario;
-    private Double valor;
+    private BigDecimal valor;
     private MetaModel meta;
 }

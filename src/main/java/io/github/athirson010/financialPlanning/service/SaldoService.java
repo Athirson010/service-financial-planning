@@ -3,11 +3,11 @@ package io.github.athirson010.financialPlanning.service;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.repository.SaldoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -16,28 +16,32 @@ import java.util.List;
 
 @Service
 public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
-    @Autowired
-    UsuarioService usuarioService;
-
-    @Autowired
+    AutenticacaoService autenticacaoService;
     GastoService gastoService;
-    Double saldoMensal = 0.0;
+    BigDecimal saldoMensal;
     private final List<Criteria> criterias = new ArrayList<>();
 
-    public SaldoService(SaldoRepository repository) {
-        super(SaldoModel.class, repository);
+    public SaldoService(Class<SaldoModel> beanClass,
+                        SaldoRepository repository,
+                        AutenticacaoService autenticacaoService,
+                        GastoService gastoService) {
+
+        super(beanClass, repository);
+        this.autenticacaoService = autenticacaoService;
+        this.gastoService = gastoService;
     }
+
 
     @Override
     public SaldoModel save(SaldoModel model) {
-        model.setUsuario(usuarioService.buscarUsuarioLogado());
+        model.setUsuario(autenticacaoService.buscarUsuarioLogado());
         return super.save(model);
     }
 
     public List<SaldoModel> buscarExtratoMensal(LocalDate data) {
         int ultimoDiadoMes = buscarUltimoDiaDoMes(data);
 
-        criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
+        criterias.add(new Criteria("usuario").is(autenticacaoService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
         criterias.add(new Criteria("data").lte(data.withDayOfMonth(ultimoDiadoMes)));
 
@@ -47,11 +51,11 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         return mongoTemplate.find(query, SaldoModel.class);
     }
 
-    public Double buscarSaldoMensal(LocalDate data) {
+    public BigDecimal buscarSaldoMensal(LocalDate data) {
 
         int ultimoDiadoMes = buscarUltimoDiaDoMes(data);
 
-        criterias.add(new Criteria("usuario").is(usuarioService.buscarUsuarioLogado()));
+        criterias.add(new Criteria("usuario").is(autenticacaoService.buscarUsuarioLogado()));
         criterias.add(new Criteria("data").gte(data.withDayOfMonth(1)));
         criterias.add(new Criteria("data").lte(data.withDayOfMonth(ultimoDiadoMes)));
 
@@ -59,11 +63,11 @@ public class SaldoService extends AbstractService<SaldoModel, SaldoRepository> {
         query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[]{})));
 
         mongoTemplate.find(query, SaldoModel.class).forEach(saldo -> {
-            saldoMensal = saldoMensal + saldo.getValor();
+            saldoMensal = saldoMensal.add(saldo.getValor());
         });
 
         mongoTemplate.find(query, GastoModel.class).forEach(gasto -> {
-            saldoMensal = saldoMensal - gasto.getValor();
+            saldoMensal = saldoMensal.subtract(gasto.getValor());
         });
 
         return saldoMensal;

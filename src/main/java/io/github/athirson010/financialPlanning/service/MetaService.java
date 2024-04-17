@@ -12,10 +12,19 @@ import java.util.List;
 
 @Service
 public class MetaService extends AbstractService<MetaModel, MetaRepository> {
-    @Autowired
+
     GastoService gastoService;
-    @Autowired
-    UsuarioService usuarioService;
+    AutenticacaoService autenticacaoService;
+
+    public MetaService(Class<MetaModel> beanClass,
+                       MetaRepository repository,
+                       GastoService gastoService,
+                       AutenticacaoService autenticacaoService) {
+        super(beanClass, repository);
+
+        this.gastoService = gastoService;
+        this.autenticacaoService = autenticacaoService;
+    }
 
     public MetaService(MetaRepository repository) {
         super(MetaModel.class, repository);
@@ -23,7 +32,7 @@ public class MetaService extends AbstractService<MetaModel, MetaRepository> {
 
     @Override
     public MetaModel save(MetaModel model) {
-        model.setUsuario(usuarioService.buscarUsuarioLogado());
+        model.setUsuario(autenticacaoService.buscarUsuarioLogado());
         super.save(model);
         criarGastosMensaisParaMeta(model);
         return model;

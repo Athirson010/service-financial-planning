@@ -21,8 +21,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class GastosController {
-    @Autowired
-    GastoService service;
+    private final GastoService service;
+
+    public GastosController(GastoService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)

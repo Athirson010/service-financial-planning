@@ -22,8 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")

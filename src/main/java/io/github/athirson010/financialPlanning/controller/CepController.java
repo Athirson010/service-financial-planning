@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/cep", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class CepController {
-    @Autowired
-    CepService service;
+    private final CepService service;
+
+    public CepController(CepService service) {
+        this.service = service;
+    }
 
     @GetMapping(path = "/{cep}")
     @ResponseStatus(HttpStatus.OK)

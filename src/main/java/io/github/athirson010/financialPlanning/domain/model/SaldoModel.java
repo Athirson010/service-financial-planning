@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Document(value = "saldo")
@@ -19,7 +20,7 @@ public class SaldoModel extends AbstractModel {
     private String origem;
 
     @NotNull
-    private Double valor;
+    private BigDecimal valor;
 
     private UsuarioModel usuario;
 

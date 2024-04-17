@@ -21,8 +21,6 @@ import java.util.Optional;
 public abstract class AbstractService<Model extends AbstractModel, Repository extends MongoRepository<Model, String>> {
     protected Repository repository;
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
     protected MongoTemplate mongoTemplate;
     protected Class<Model> beanClass;
     @Value("${findall.max.results}")
@@ -54,7 +52,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
 
     public Page<Model> findAllPage(Integer page, Integer size) {
         if (page == null || size == null) {
-            return new PageImpl(repository.findAll());
+            return new PageImpl<>(repository.findAll());
         } else {
             return repository.findAll(PageRequest.of(page, size));
         }
