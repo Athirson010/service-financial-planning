@@ -3,7 +3,6 @@ package io.github.athirson010.financialPlanning.service;
 
 import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

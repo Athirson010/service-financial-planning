@@ -3,7 +3,6 @@ package io.github.athirson010.financialPlanning.service;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.MetaModel;
 import io.github.athirson010.financialPlanning.repository.MetaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

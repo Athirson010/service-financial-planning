@@ -4,7 +4,6 @@ import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioDe
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
