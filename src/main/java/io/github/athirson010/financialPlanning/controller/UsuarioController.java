@@ -25,7 +25,6 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping
-
     public ResponseEntity<Void> criar(@RequestBody @Valid UsuarioCriacaoDTO usuarioCriacaoDto) {
         this.usuarioService.criar(usuarioCriacaoDto);
         return ResponseEntity.status(201).build();
