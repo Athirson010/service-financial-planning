@@ -1,5 +1,6 @@
 package io.github.athirson010.financialPlanning.domain.dto.autenticacao;
 
+import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,13 @@ public class UsuarioDetalhesDTO implements UserDetails {
     private String email;
 
     private String senha;
+
+    public UsuarioDetalhesDTO(UsuarioModel usuario) {
+        this.nome = usuario.getNome();
+        this.email = usuario.getEmail();
+        this.senha = usuario.getSenha();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

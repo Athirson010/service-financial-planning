@@ -1,63 +1,41 @@
 package io.github.athirson010.financialPlanning.controller;
 
-import io.github.athirson010.financialPlanning.domain.dto.token.TokenDTO;
-import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioLoginDTO;
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioTokenDTO;
+import io.github.athirson010.financialPlanning.domain.dto.usuario.UsuarioCriacaoDTO;
 import io.github.athirson010.financialPlanning.service.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.HttpStatus.CREATED;
 
 @RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Usuario")
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
-    @Autowired
-    UsuarioService service;
 
-    @PostMapping("/autenticar")
-    public TokenDTO auth(@RequestBody CredenciaisDTO credenciais) {
-        return service.certificar(credenciais);
-    }
+    @Autowired
+    private UsuarioService usuarioService;
 
     @PostMapping
-    @ResponseStatus(CREATED)
-    public void postCriarUsuario(@Valid @RequestBody UsuarioModel usuario) {
-        service.criarUsuario(usuario);
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> criar(@RequestBody @Valid UsuarioCriacaoDTO usuarioCriacaoDto) {
+        this.usuarioService.criar(usuarioCriacaoDto);
+        return ResponseEntity.status(201).build();
     }
 
-    @GetMapping()
-    public Page<UsuarioModelDTO> buscarUsuarios(UsuarioModelDTO filter, @PageableDefault() Pageable pageable) {
-        return service.buscarTodosUsuarios(filter, pageable);
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDto) {
+        UsuarioTokenDTO usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
+        return ResponseEntity.status(200).body(usuarioTokenDto);
     }
-
-    @GetMapping("/{email}")
-    public UsuarioModelDTO getUsuarioPorEmail(@PathVariable String email) {
-        return service.buscarUsuarioDTOPorEmail(email);
-    }
-
-    @GetMapping("/{id}")
-    public UsuarioModelDTO getUsuarioPorId(@PathVariable String id) {
-        return service.buscarUsuarioDTOPorId(id);
-    }
-
-    @PutMapping("/{id}")
-    public UsuarioModelDTO putDadosUsuarioPorId(@PathVariable String id, @Valid @RequestBody UsuarioModel user) {
-        return service.atualizarDadosUsuario(id, user);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUsuarioPorId(@PathVariable String id) {
-        service.deletarUsuario(id);
-    }
-
-
 }
+

@@ -1,5 +1,6 @@
 package io.github.athirson010.financialPlanning.service;
 
+import io.github.athirson010.financialPlanning.domain.dto.autenticacao.UsuarioDetalhesDTO;
 import io.github.athirson010.financialPlanning.domain.model.usuario.UsuarioModel;
 import io.github.athirson010.financialPlanning.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,6 @@ public class AutenticacaoService implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
         }
 
-        return new UsuarioDetalhesDto(usuarioOpt.get());
+        return new UsuarioDetalhesDTO(usuarioOpt.get());
     }
 }
