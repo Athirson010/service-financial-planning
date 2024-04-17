@@ -1,12 +1,10 @@
 package io.github.athirson010.financialPlanning.controller;
 
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
-import io.github.athirson010.financialPlanning.exception.NaoEncontradoException;
 import io.github.athirson010.financialPlanning.service.SaldoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

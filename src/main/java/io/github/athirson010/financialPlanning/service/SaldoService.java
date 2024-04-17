@@ -1,6 +1,5 @@
 package io.github.athirson010.financialPlanning.service;
 
-import io.github.athirson010.financialPlanning.domain.AbstractModel;
 import io.github.athirson010.financialPlanning.domain.model.GastoModel;
 import io.github.athirson010.financialPlanning.domain.model.SaldoModel;
 import io.github.athirson010.financialPlanning.repository.SaldoRepository;

@@ -49,6 +49,7 @@ public abstract class AbstractService<Model extends AbstractModel, Repository ex
             return repository.findAll(PageRequest.of(page, size)).getContent();
         }
     }
+
     public Page<Model> findAllPage(Integer page, Integer size) {
         if (page == null || size == null) {
             return new PageImpl<>(repository.findAll());
