@@ -7,6 +7,7 @@ services:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
     ports:
       - "27017:27017"
+
   rabbit:
     image: "rabbitmq:3-management"
     networks:
@@ -112,5 +113,24 @@ services:
     links:
       - app-opensearch:app-opensearch
 
+  app-sonar:
+    image: sonarqube:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./sonar-data:/opt/sonarqube/data
+    environment:
+      SONARQUBE_JDBC_URL: jdbc:postgresql://postgres:5432/sonar
+      SONARQUBE_JDBC_USERNAME: sonar
+      SONARQUBE_JDBC_PASSWORD: sonar
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14.0
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: sonar
 networks:
   net-backend:
