@@ -1,0 +1,79 @@
+entry-pipeline:
+  delay: "100"
+  source:
+    otel_trace_source:
+      ssl: false
+  sink:
+    - pipeline:
+        name: "raw-pipeline"
+    - pipeline:
+        name: "service-map-pipeline"
+raw-pipeline:
+  source:
+    pipeline:
+      name: "entry-pipeline"
+  processor:
+    - otel_trace_raw:
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch:9200" ]
+        username: admin
+        password: admin
+        # hosts: [ "${env:OSS_URL}" ]
+        # username: ${env:OSS_USER}
+        # password: ${env:OSS_PWD}
+        insecure: true
+        index_type: trace-analytics-raw
+service-map-pipeline:
+  delay: "100"
+  source:
+    pipeline:
+      name: "entry-pipeline"
+  processor:
+    - service_map_stateful:
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch:9200" ]
+        username: admin
+        password: admin
+        # hosts: [ "${env:OSS_URL}" ]
+        # username: ${env:OSS_USER}
+        # password: ${env:OSS_PWD}
+        insecure: true
+        index_type: trace-analytics-service-map
+log-pipeline:
+  source:
+    http:
+      ssl: false
+      authentication:
+        unauthenticated:
+  processor:
+    - grok:
+        match:
+          log: [ "%{COMMONAPACHELOG}" ]
+  sink:
+    - opensearch:
+        hosts: [ "https://opensearch:9200" ]
+        username: admin
+        password: admin
+          # hosts: [ "${env:OSS_URL}" ]
+          # username: ${env:OSS_USER}
+        # password: ${env:OSS_PWD}
+        insecure: true
+        index: cluster-logs
+  # metrics-pipeline:
+  #   source:
+  #     otel_metrics_source:
+  #       ssl: false
+  #   processor:
+  #     - otel_metrics_raw_processor:
+  #   sink:
+  #     - opensearch:
+  #         hosts: [ "http://@OSS_URL:9200" ]
+  #         username: @OSS_USER
+  #         password: @OSS_PWD
+  #         # hosts: [ "${env:OSS_URL}" ]
+  #         # username: ${env:OSS_USER}
+  #         # password: ${env:OSS_PWD}
+  #         insecure: true
+  #         index: @CLUSTER_metrics

@@ -10,8 +10,6 @@ services:
 
   rabbit:
     image: "rabbitmq:3-management"
-    networks:
-      - net-backend
     environment:
       RABBITMQ_ERLANG_COOKIE: "SW"
       RABBITMQ_DEFAULT_USER: "rabbitmq"
@@ -21,14 +19,12 @@ services:
       - "15672:15672"
       - "5672:5672"
 
-  app-backend-financial:
+  backend-financial:
     container_name: app-backend-financial
     depends_on:
       - mongo
     image: service-financial-planning:latest
     restart: on-failure
-    networks:
-      - net-backend
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
@@ -36,7 +32,7 @@ services:
       retries: 5
       start_period: 40s
     environment:
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://app-otlp-collector:4317
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otlp-collector:4317
       OTEL_JAVAAGENT_DEBUG: true
       OTEL_TRACES_EXPORTER: otlp
       OTEL_LOGS_EXPORTER_OTLP: otlp
@@ -44,10 +40,10 @@ services:
       OTEL_JAVAAGENT_LOGGING: application
       OTEL_SERVICE_NAME: planejamento-financeiro-v1
       SPRING_APPLICATION_JSON: '{
-            "spring.data.mongodb.host":"app_mongo",
+            "spring.data.mongodb.host":"mongo",
             "spring.data.mongodb.port":27017,
             "spring.data.mongodb.database":"planejamento-financeiro",
-            "spring.rabbitmq.host":"app_rabbit",
+            "spring.rabbitmq.host":"rabbit",
             "spring.rabbitmq.port":"5672",
             "spring.rabbitmq.username":"rabbitmq",
             "spring.rabbitmq.password":"rabbitmq",
@@ -55,18 +51,14 @@ services:
           }'
     ports:
       - "8080:8080"
-    links:
-      - mongo:app_mongo
-      - app-otlp-collector:app-otlp-collector
-      - rabbit:app_rabbit
 
-  app-otlp-collector:
-    container_name: app-otlp-collector
+  otlp-collector:
+    container_name: otlp-collector
     image: otel/opentelemetry-collector
     restart: on-failure
     command: [ --config=/etc/otel-collector-config.yaml ]
     volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./config/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
       - 1888:1888 # pprof extension
       - 8888:8888 # Prometheus metrics exposed by the collector
@@ -75,24 +67,20 @@ services:
       - 4317:4317 # OTLP gRPC receiver
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
-    links:
-      - app-data-prepper:app-data-prepper
 
-  app-data-prepper:
-    container_name: app-data-prepper
+  data-prepper:
+    container_name: data-prepper
     image: opensearchproject/data-prepper:latest
     volumes:
-      - ./data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
-      - ./pipelines.yaml:/usr/share/data-prepper/pipelines/pipelines.yaml
+      - ./config/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml
+      - ./config/pipelines.yaml:/usr/share/data-prepper/pipelines/pipelines.yaml
     ports:
       - 21890:21890
       - 2021:2021
       - 4900:4900
-    links:
-      - app-opensearch:app-opensearch
 
-  app-opensearch:
-    container_name: app-opensearch
+  opensearch:
+    container_name: opensearch
     image: opensearchproject/opensearch
     environment:
       discovery.type: single-node
@@ -101,19 +89,17 @@ services:
       - 9200:9200
       - 9600:9600
 
-  app-opensearch-dashboard:
-    container_name: app-opensearch-dashboard
+  opensearch-dashboard:
+    container_name: opensearch-dashboard
     image: opensearchproject/opensearch-dashboards:latest
     ports:
       - 5601:5601
     expose:
       - "5601"
     environment:
-      OPENSEARCH_HOSTS: https://app-opensearch:9200
-    links:
-      - app-opensearch:app-opensearch
+      OPENSEARCH_HOSTS: https://opensearch:9200
 
-  app-sonar:
+  sonar:
     image: sonarqube:latest
     ports:
       - "9000:9000"
@@ -132,5 +118,3 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: sonar
-networks:
-  net-backend:
