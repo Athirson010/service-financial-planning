@@ -1,5 +1,4 @@
 entry-pipeline:
-  delay: "100"
   source:
     otel_trace_source:
       ssl: false
@@ -22,7 +21,6 @@ raw-pipeline:
         insecure: true
         index_type: trace-analytics-raw
 service-map-pipeline:
-  delay: "100"
   source:
     pipeline:
       name: "entry-pipeline"
