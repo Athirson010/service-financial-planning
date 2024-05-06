@@ -19,9 +19,6 @@ raw-pipeline:
         hosts: [ "https://opensearch:9200" ]
         username: admin
         password: admin
-        # hosts: [ "${env:OSS_URL}" ]
-        # username: ${env:OSS_USER}
-        # password: ${env:OSS_PWD}
         insecure: true
         index_type: trace-analytics-raw
 service-map-pipeline:
@@ -36,9 +33,6 @@ service-map-pipeline:
         hosts: [ "https://opensearch:9200" ]
         username: admin
         password: admin
-        # hosts: [ "${env:OSS_URL}" ]
-        # username: ${env:OSS_USER}
-        # password: ${env:OSS_PWD}
         insecure: true
         index_type: trace-analytics-service-map
 log-pipeline:
